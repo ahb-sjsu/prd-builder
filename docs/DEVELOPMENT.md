@@ -42,7 +42,7 @@ src/
     settings.ts              AppSettings type
 
   constants/
-    questions.ts             All 4 role question banks
+    questions.ts             All 4 role question banks (88 questions total)
     compliance.ts            Screener questions, framework info, nudges
     roles.ts                 Role metadata (id, label, color, icon)
 
@@ -98,6 +98,63 @@ src/
 - `prd_settings` -- app settings JSON
 - `prd_sessions_index` -- array of session IDs
 - `prd_sess_{id}` -- individual session JSON
+
+## Standards Alignment
+
+The questionnaire and PRD output are aligned with:
+
+- **ISO/IEC/IEEE 29148:2018** -- requirements engineering (supersedes IEEE 830)
+- **IEEE 830-1998** -- software requirements specifications
+- **Industry PRD best practices** -- Atlassian, Perforce, Inflectra, Reforge
+
+### Question Coverage by Role
+
+| Role | Questions | Key Areas |
+|---|---|---|
+| Founder | 17 | Vision, users, features, acceptance criteria, KPIs, glossary, dependencies |
+| Product Manager | 27 | Personas, functional/non-functional reqs, compliance, security, governance, deployment, UI/UX, maintenance |
+| Developer | 25 | Architecture, data model, performance, integrations, acceptance tests, deployment, i18n, operations |
+| Law Enforcement | 19 | Daily workflow, access control, data sensitivity, existing systems, data migration, notifications |
+
+### PRD Output Sections (20 total)
+
+| # | Section | Standard Source |
+|---|---|---|
+| 1 | Executive Summary | ISO 29148 §1 |
+| 2 | Product Vision & Goals | ISO 29148 §2.1 |
+| 3 | Users & Personas | ISO 29148 §2.3 |
+| 4 | User Workflows | ISO 29148 §3 |
+| 5 | Functional Requirements | ISO 29148 §3, IEEE 830 |
+| 6 | Non-Functional Requirements | ISO 29148 §4 |
+| 7 | Core Data Model | ISO 29148 §6.4 |
+| 8 | Decision Logic & Business Rules | ISO 29148 §3 |
+| 9 | Compliance & Security | ISO 29148 §4.2, §6.1 |
+| 10 | System Integrations | ISO 29148 §5 |
+| 11 | Assumptions | ISO 29148 §2.4 |
+| 12 | Known Risks | Industry best practice |
+| 13 | Out of Scope | Industry best practice |
+| 14 | Constraints | ISO 29148 §2.4, §6.3 |
+| 15 | Stakeholders & Approval | Industry best practice |
+| 16 | Acceptance Criteria | ISO 29148 §7 |
+| 17 | Success Metrics & KPIs | Industry best practice |
+| 18 | Glossary | ISO 29148 §1.5, IEEE 830 |
+| 19 | Dependencies | ISO 29148 §2.4 |
+| 20 | Deployment & Migration Plan | ISO 29148 §6.2 |
+
+### Adding Questions
+
+When adding questions, assign them to the appropriate `sect` (section label shown in the wizard). Each question needs:
+
+- `id` -- unique within the role, becomes the key in `session.contributions[role]`
+- `sect` -- section grouping displayed in the wizard
+- `type` -- `text`, `textarea`, `single`, or `multi`
+- `text` -- the question itself
+- `hint` (optional) -- help text shown below the question
+- `ex` (optional) -- example with `l` (label) and `t` (text)
+- `choices` (for `single`/`multi`) -- array of options
+- `required` (optional) -- set `false` for optional questions (default is required)
+
+If the question feeds a new PRD section, update both `buildPrompt()` (AI output) and `generateTemplate()` (free template) in `src/helpers/prdGenerator.ts`.
 
 ## Adding a New Role
 

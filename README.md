@@ -1,6 +1,6 @@
 # PRD Builder
 
-Build professional Product Requirements Documents through guided questionnaires -- no technical knowledge needed.
+Build professional, standards-aligned Product Requirements Documents through guided questionnaires -- no technical knowledge needed.
 
 **[Use PRD Builder](https://ahb-sjsu.github.io/prd-builder/)**
 
@@ -13,8 +13,32 @@ Build professional Product Requirements Documents through guided questionnaires 
 5. **Invite your team** -- share the 6-character session code so teammates can add their perspective
 6. **Generate your PRD** -- get a complete, structured document ready to hand to developers
 
+## Standards Alignment
+
+PRD Builder's questionnaire and output structure are aligned with established software engineering standards:
+
+- **ISO/IEC/IEEE 29148:2018** -- the current international standard for requirements engineering (supersedes IEEE 830)
+- **IEEE 830-1998** -- the classic recommended practice for software requirements specifications
+- **Industry best practices** -- from Atlassian, Perforce, Inflectra, and Reforge PRD frameworks
+
+Every generated PRD includes 20 sections covering:
+
+| Sections 1--10 | Sections 11--20 |
+|---|---|
+| Executive Summary | Assumptions |
+| Product Vision & Goals | Known Risks |
+| Users & Personas | Out of Scope |
+| User Workflows | Constraints |
+| Functional Requirements (numbered) | Stakeholders & Approval |
+| Non-Functional Requirements (measurable) | Acceptance Criteria |
+| Core Data Model | Success Metrics & KPIs |
+| Decision Logic & Business Rules | Glossary |
+| Compliance & Security Requirements | Dependencies |
+| System Integrations | Deployment & Migration Plan |
+
 ## Features
 
+- **Standards-based questionnaire** -- 88 questions across 4 roles, mapped to ISO 29148 and IEEE 830
 - **Role-based questions** -- 4 roles, each with questions suited to their expertise
 - **Compliance detection** -- automatically flags CJIS, FedRAMP, HIPAA, CMMC, StateRAMP, and more
 - **Team collaboration** -- share a session code and multiple people contribute to one PRD
