@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useSettings } from './settings/useSettings';
 import { useSessions } from './hooks/useSessions';
 import { Header } from './components/layout/Header';
+import { Breadcrumb } from './components/layout/Breadcrumb';
 import { SettingsPanel } from './components/layout/SettingsPanel';
 import { LandingPage } from './pages/LandingPage';
 import { Dashboard } from './pages/Dashboard';
@@ -76,6 +77,18 @@ export function App() {
     setProgressInfo(null);
   }, []);
 
+  const handleBreadcrumbNav = useCallback(
+    (target: AppScreen) => {
+      setScreen(target);
+      if (target.page !== 'wizard' || target.step !== 'questions') {
+        setProgressInfo(null);
+      }
+    },
+    [],
+  );
+
+  const showBreadcrumb = screen.page !== 'landing';
+
   return (
     <>
       <Header
@@ -94,7 +107,15 @@ export function App() {
         showDashboard={goToDashboard}
       />
 
-      <div className="main">
+      {showBreadcrumb && (
+        <Breadcrumb
+          screen={screen}
+          productName={sessionManager.activeSession?.productName}
+          onNavigate={handleBreadcrumbNav}
+        />
+      )}
+
+      <div className={`main${showBreadcrumb ? ' has-breadcrumb' : ''}`}>
         {screen.page === 'landing' && (
           <LandingPage
             onStartNew={startNewPrd}
