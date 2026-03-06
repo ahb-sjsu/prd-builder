@@ -47,23 +47,7 @@ Your key stays in your browser and is only used to call the Claude API directly.
 
 ## For Developers
 
-<details>
-<summary>Development setup</summary>
-
-```bash
-npm install
-npm run dev       # Dev server at localhost:5173/prd-builder/
-npm test          # Run tests
-npm run build     # Production build
-npm run lint      # Lint
-npm run typecheck # Type check
-```
-
-**Tech stack:** React 19, TypeScript 5.9, Vite 7, GitHub Pages
-
-**Deployment:** Automatic via GitHub Actions on push to `main`. Enable GitHub Pages in repo Settings > Pages > Source: GitHub Actions.
-
-</details>
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for setup, architecture, and contributing.
 
 ## License
 
