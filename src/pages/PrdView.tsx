@@ -12,6 +12,7 @@ interface Props {
   onAddContributor: () => void;
   onStartNew: () => void;
   onRegenerate: () => void;
+  onBack: () => void;
 }
 
 export function PrdView({
@@ -19,6 +20,7 @@ export function PrdView({
   onAddContributor,
   onStartNew,
   onRegenerate,
+  onBack,
 }: Props) {
   const { canUseFeature } = usePlan();
   const { settings } = useSettings();
@@ -94,10 +96,15 @@ ${compBanner}${bodyHtml}`;
   return (
     <div className="screen-enter">
       <div className="prd-bar">
-        <div>
-          <div className="ptl-tag">Product Requirements Document</div>
-          <div className="ptl-name">
-            {session.productName || 'Untitled'}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <button className="btn btn-ghost" onClick={onBack} type="button" style={{ padding: '7px 14px' }}>
+            Back
+          </button>
+          <div>
+            <div className="ptl-tag">Product Requirements Document</div>
+            <div className="ptl-name">
+              {session.productName || 'Untitled'}
+            </div>
           </div>
         </div>
         <div className="tbar-btns">

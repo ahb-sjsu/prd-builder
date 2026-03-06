@@ -172,6 +172,7 @@ export function App() {
             onRegenerate={() =>
               setScreen({ page: 'wizard', step: 'generating' })
             }
+            onBack={goToDashboard}
           />
         )}
       </div>
