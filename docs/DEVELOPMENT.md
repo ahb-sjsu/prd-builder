@@ -169,6 +169,10 @@ If the question feeds a new PRD section, update both `buildPrompt()` (AI output)
 2. Add framework info in `FRAMEWORK_INFO` in the same file
 3. Optionally add nudges in `COMPLIANCE_NUDGES`
 
+## UAT
+
+See [UAT-CHECKLIST.md](UAT-CHECKLIST.md) for the full user acceptance testing checklist. Copy it for each release, fill in the version and date, and check off each item.
+
 ## Testing
 
 Tests use Vitest with happy-dom. Run with `npm test`.
