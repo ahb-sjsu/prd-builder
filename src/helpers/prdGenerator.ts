@@ -53,6 +53,11 @@ OUTPUT SECTIONS (include ALL of these):
 ## 13. Out of Scope
 ## 14. Constraints
 ## 15. Stakeholders & Approval
+## 16. Acceptance Criteria
+## 17. Success Metrics & KPIs
+## 18. Glossary
+## 19. Dependencies
+## 20. Deployment & Migration Plan
 
 FORMATTING RULES:
 - Every Functional Requirement MUST follow Actor + Action + Condition format.
@@ -162,7 +167,12 @@ export function generateTemplate(session: PrdSession): string {
   sections.push(`## 6. Non-Functional Requirements\n`);
   const nfr = session.contributions.pm?.nfr || session.contributions.developer?.performance;
   if (nfr) sections.push(`${nfr}\n`);
-  else sections.push(`[To be defined based on project scope]\n`);
+  const uiux = session.contributions.pm?.ui_ux;
+  if (uiux) sections.push(`**UI/UX:** ${uiux}\n`);
+  const maint =
+    session.contributions.pm?.maintenance || session.contributions.developer?.maintenance;
+  if (maint) sections.push(`**Maintenance & Support:** ${maint}\n`);
+  if (!nfr && !uiux && !maint) sections.push(`[To be defined based on project scope]\n`);
 
   sections.push(`## 7. Core Data Model\n`);
   const entities =
@@ -197,6 +207,12 @@ export function generateTemplate(session: PrdSession): string {
       session.contributions[role]?.existing_systems;
     if (integ) sections.push(`${integ}\n`);
   }
+  const notif: string[] = [];
+  for (const role of roles) {
+    const n = session.contributions[role]?.notifications;
+    if (n) notif.push(String(n));
+  }
+  if (notif.length > 0) sections.push(`**Notifications & Alerts:**\n${notif.join('\n')}\n`);
 
   sections.push(`## 11. Assumptions\n`);
   sections.push(`[To be validated with stakeholders]\n`);
@@ -223,12 +239,61 @@ export function generateTemplate(session: PrdSession): string {
     session.contributions.pm?.timeline;
   if (constraints) sections.push(`${constraints}\n`);
   if (timeline) sections.push(`**Timeline:** ${timeline}\n`);
+  const i18n = session.contributions.developer?.i18n;
+  if (i18n) sections.push(`**Internationalization:** ${i18n}\n`);
 
   sections.push(`## 15. Stakeholders & Approval\n`);
   const approvers =
     session.contributions.founder?.who_approves ||
     session.contributions.pm?.stakeholders;
   if (approvers) sections.push(`${approvers}\n`);
+
+  sections.push(`## 16. Acceptance Criteria\n`);
+  for (const role of roles) {
+    const ac = session.contributions[role]?.acceptance_criteria;
+    if (ac) {
+      const meta = ROLES.find((r) => r.id === role);
+      sections.push(`### ${meta?.label || role}\n${ac}\n`);
+    }
+  }
+
+  sections.push(`## 17. Success Metrics & KPIs\n`);
+  const kpis =
+    session.contributions.pm?.success_metrics ||
+    session.contributions.founder?.success_metrics;
+  if (kpis) sections.push(`${kpis}\n`);
+  else sections.push(`[To be defined with measurable baselines and targets]\n`);
+
+  sections.push(`## 18. Glossary\n`);
+  const glossaryEntries: string[] = [];
+  for (const role of roles) {
+    const g = session.contributions[role]?.glossary;
+    if (g) glossaryEntries.push(String(g));
+  }
+  if (glossaryEntries.length > 0) sections.push(`${glossaryEntries.join('\n\n')}\n`);
+  else sections.push(`[To be compiled from domain experts]\n`);
+
+  sections.push(`## 19. Dependencies\n`);
+  const deps: string[] = [];
+  for (const role of roles) {
+    const d = session.contributions[role]?.dependencies;
+    if (d) deps.push(String(d));
+  }
+  if (deps.length > 0) sections.push(`${deps.join('\n\n')}\n`);
+  else sections.push(`[No external dependencies identified yet]\n`);
+
+  sections.push(`## 20. Deployment & Migration Plan\n`);
+  const deploy =
+    session.contributions.pm?.deployment ||
+    session.contributions.developer?.deployment;
+  if (deploy) sections.push(`**Deployment Strategy:** ${deploy}\n`);
+  const migration =
+    session.contributions.pm?.data_migration ||
+    session.contributions.developer?.data_migration ||
+    session.contributions.leo?.data_migration;
+  if (migration) sections.push(`**Data Migration:** ${migration}\n`);
+  if (!deploy && !migration)
+    sections.push(`[To be defined based on infrastructure and legacy systems]\n`);
 
   return sections.join('\n');
 }
