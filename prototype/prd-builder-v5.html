@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">PRD Builder v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d1117; --surface:#161b22; --surface2:#1c2230; --border:#2a3344;
+  --gold:#e8a020; --blue:#4a9eff; --green:#3fb950; --purple:#bc8cff; --red:#f85149;
+  --text:#e6edf3; --dim:#7d8590; --mid:#adbac7; --r:6px;
+  --brand-primary: #e8a020; --brand-name: "PRD Builder";
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(74,158,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(74,158,255,.025) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+
+/* ── HEADER ── */
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
+.hdr-in{max-width:900px;margin:0 auto;padding:11px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.logo{display:flex;align-items:center;gap:11px;cursor:pointer;}
+.lmark{width:30px;height:30px;background:var(--brand-primary);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:900;font-size:15px;color:var(--bg);flex-shrink:0;transition:background .3s;}
+.lname{font-family:'Fraunces',serif;font-weight:700;font-size:14px;color:var(--text);}
+.lsub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.hpill{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--surface2);border:1px solid var(--border);padding:5px 12px;border-radius:20px;cursor:pointer;transition:all .15s;color:var(--dim);}
+.hpill:hover{border-color:var(--gold);color:var(--gold);}
+.hpill.blue:hover{border-color:var(--blue);color:var(--blue);}
+.prog-wrap{display:none;flex-direction:column;gap:3px;min-width:140px;}
+.prog-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;display:flex;justify-content:space-between;}
+.prog-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--brand-primary),color-mix(in srgb,var(--brand-primary) 60%,#fff));transition:width .4s;}
+
+/* ── MAIN ── */
+.main{max-width:900px;margin:0 auto;padding:44px 28px 80px;position:relative;z-index:1;}
+
+/* ── SCREENS ── */
+.scr{display:none;} .scr.on{display:block;animation:fu .3s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════════════
+   LANDING
+══════════════════════════════════ */
+.land-hero{text-align:center;padding:12px 0 44px;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.land-hero h1{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,44px);font-weight:900;line-height:1.1;margin-bottom:14px;background:linear-gradient(140deg,#e6edf3 30%,#7d8590);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.land-hero p{font-size:15px;color:var(--mid);max-width:500px;margin:0 auto 36px;line-height:1.7;}
+.land-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:520px;margin:0 auto 32px;}
+.acard{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:26px 22px;cursor:pointer;transition:all .2s;text-align:center;}
+.acard:hover{border-color:var(--brand-primary);background:var(--surface2);transform:translateY(-2px);}
+.acard-icon{font-size:26px;margin-bottom:10px;}
+.acard-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.acard-desc{font-size:12px;color:var(--dim);line-height:1.5;}
+.join-area{max-width:400px;margin:0 auto;display:none;}
+.join-box{display:flex;gap:10px;margin:12px 0;}
+.join-box input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:16px;letter-spacing:.2em;text-align:center;padding:11px 14px;outline:none;text-transform:uppercase;transition:border-color .2s;}
+.join-box input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,160,32,.1);}
+.join-err{font-size:13px;color:var(--red);min-height:18px;}
+.divider{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin:8px 0;}
+
+/* ══════════════════════════════════
+   COMPLIANCE SCREENER
+══════════════════════════════════ */
+.comp-screen{}
+.comp-header{margin-bottom:32px;}
+.comp-header h2{font-family:'Fraunces',serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:8px;}
+.comp-header p{font-size:14px;color:var(--mid);max-width:580px;line-height:1.7;}
+.comp-intro-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--r);padding:20px 24px;margin-bottom:28px;}
+.comp-intro-card p{font-size:14px;color:var(--mid);line-height:1.7;}
+.comp-intro-card strong{color:var(--gold);}
+.screener-qs{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;}
+.sq{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 26px;}
+.sq-text{font-family:'Fraunces',serif;font-size:17px;font-weight:400;color:var(--text);margin-bottom:6px;line-height:1.4;}
+.sq-hint{font-size:13px;color:var(--dim);margin-bottom:14px;font-style:italic;}
+.sq-opts{display:flex;gap:10px;flex-wrap:wrap;}
+.sq-opt{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:8px 18px;font-size:13px;color:var(--mid);cursor:pointer;transition:all .15s;}
+.sq-opt:hover{border-color:var(--gold);color:var(--text);}
+.sq-opt.sel{background:rgba(232,160,32,.12);border-color:var(--gold);color:var(--text);}
+.comp-results{display:none;margin-bottom:28px;}
+.comp-results-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.comp-flags{display:flex;flex-direction:column;gap:10px;}
+.cflag{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+.cflag-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.cflag-body{}
+.cflag-name{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.cflag-desc{font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:6px;}
+.cflag-impact{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--dim);line-height:1.5;}
+.cflag-impact span{color:var(--red);font-weight:500;}
+.cflag.warn{border-left:3px solid var(--red);}
+.cflag.info{border-left:3px solid var(--blue);}
+.cflag.note{border-left:3px solid var(--gold);}
+
+/* ══════════════════════════════════
+   ROLE PICKER
+══════════════════════════════════ */
+.role-hdr{margin-bottom:28px;}
+.role-hdr h2{font-family:'Fraunces',serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:8px;}
+.role-hdr p{font-size:14px;color:var(--mid);max-width:560px;line-height:1.7;}
+.sess-status{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:24px;display:none;}
+.ss-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.ss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.ss-item{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:7px 11px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mid);}
+.ss-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;}
+.ss-dot.done{background:var(--green);}
+.ss-code-row{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.ss-code{font-family:'IBM Plex Mono',monospace;font-size:22px;letter-spacing:.25em;color:var(--gold);}
+.role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+.rcard{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:22px 18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.rcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--rc,var(--border));transition:all .2s;}
+.rcard:hover{border-color:var(--rc,var(--gold));background:var(--surface2);transform:translateY(-2px);}
+.rcard.sel{border-color:var(--rc,var(--gold));background:var(--surface2);}
+.rcard.sel::after,.rcard.done-b::after{content:'✓';position:absolute;top:9px;right:12px;font-size:12px;color:var(--rc,var(--gold));}
+.rcard.done-b::after{content:'✓ Done';font-size:10px;color:var(--green);font-family:'IBM Plex Mono',monospace;}
+.rc-icon{font-size:26px;margin-bottom:8px;}
+.rc-name{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.rc-desc{font-size:12px;color:var(--dim);line-height:1.4;}
+[data-role=founder]{--rc:#e8a020;} [data-role=pm]{--rc:#4a9eff;} [data-role=developer]{--rc:#3fb950;} [data-role=leo]{--rc:#bc8cff;}
+
+/* ══════════════════════════════════
+   QUESTIONS
+══════════════════════════════════ */
+.q-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
+.q-badge{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);padding:5px 13px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);}
+.q-dot{width:7px;height:7px;border-radius:50%;}
+.q-ctr{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:30px 34px;margin-bottom:16px;animation:fu .3s ease;position:relative;}
+.qcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--qa,var(--gold));border-radius:var(--r) 0 0 var(--r);}
+.q-sect{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--qa,var(--gold));margin-bottom:7px;}
+.q-text{font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:var(--text);line-height:1.35;margin-bottom:9px;}
+.q-hint{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:8px;font-style:italic;}
+.q-ex{background:rgba(74,158,255,.07);border:1px solid rgba(74,158,255,.15);border-radius:4px;padding:9px 13px;font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:14px;}
+.q-ex strong{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:3px;}
+
+/* Compliance nudge inside question */
+.comp-nudge{background:rgba(232,160,32,.08);border:1px solid rgba(232,160,32,.25);border-radius:4px;padding:10px 14px;margin-top:12px;display:none;}
+.cn-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.cn-text{font-size:13px;color:var(--mid);line-height:1.6;}
+
+input[type=text],textarea,select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:11px 15px;outline:none;transition:border-color .2s,box-shadow .2s;resize:vertical;}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,160,32,.1);}
+textarea{min-height:96px;line-height:1.6;}
+
+.choices{display:flex;flex-direction:column;gap:7px;}
+.cbtn{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px 15px;color:var(--mid);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:11px;}
+.cbtn:hover{border-color:var(--gold);color:var(--text);background:rgba(232,160,32,.05);}
+.cbtn.sel{border-color:var(--gold);color:var(--text);background:rgba(232,160,32,.1);}
+.chk{width:17px;height:17px;border:1px solid var(--border);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .15s;}
+.cbtn.sel .chk{background:var(--gold);border-color:var(--gold);color:var(--bg);}
+.cbtn.multi .chk{border-radius:3px;}
+.multi-hint{font-size:12px;color:var(--dim);margin-top:7px;}
+
+.qnav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;}
+.qnav-r{display:flex;align-items:center;gap:12px;}
+
+/* ══════════════════════════════════
+   BUTTONS
+══════════════════════════════════ */
+.btn{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:10px 22px;border:none;border-radius:var(--r);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px;}
+.btn-gold{background:var(--brand-primary);color:var(--bg);font-weight:700;}
+.btn-gold:hover{filter:brightness(1.1);}
+.btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--text);border-color:var(--mid);}
+.btn-big{font-size:15px;padding:13px 32px;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.skip-lnk{font-size:13px;color:var(--dim);cursor:pointer;background:none;border:none;text-decoration:underline;font-family:'DM Sans',sans-serif;}
+.skip-lnk:hover{color:var(--mid);}
+.cpybtn{font-size:12px;color:var(--dim);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:4px 11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.cpybtn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ══════════════════════════════════
+   DONE SCREEN
+══════════════════════════════════ */
+.done-wrap{text-align:center;padding:36px 0;}
+.done-wrap h2{font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:var(--text);margin-bottom:10px;}
+.done-wrap p{font-size:14px;color:var(--mid);max-width:500px;margin:0 auto 28px;line-height:1.7;}
+.done-contribs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 auto 28px;max-width:620px;}
+.dc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center;}
+.dc-icon{font-size:22px;margin-bottom:5px;}
+.dc-name{font-family:'Fraunces',serif;font-size:12px;font-weight:700;color:var(--mid);margin-bottom:3px;}
+.dc-st{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;}
+.dc.has .dc-st{color:var(--green);}
+.dc:not(.has) .dc-st{color:var(--dim);}
+.done-code-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 24px;max-width:400px;margin:0 auto 24px;text-align:center;}
+.dcb-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
+.dcb-code{font-family:'IBM Plex Mono',monospace;font-size:28px;letter-spacing:.3em;color:var(--gold);margin-bottom:10px;}
+.dcb-hint{font-size:12px;color:var(--dim);line-height:1.5;}
+
+/* ══════════════════════════════════
+   VALIDATION NUDGE
+══════════════════════════════════ */
+.val-nudge{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.25);border-radius:4px;padding:9px 13px;margin-top:10px;display:none;animation:fu .2s ease;}
+.vn-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:3px;}
+.vn-text{font-size:13px;color:var(--mid);line-height:1.5;}
+.followup-q{background:rgba(74,158,255,.07);border:1px solid rgba(74,158,255,.2);border-radius:4px;padding:12px 14px;margin-top:12px;display:none;animation:fu .25s ease;}
+.fq-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.fq-text{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;}
+
+/* ══════════════════════════════════
+   GENERATING
+.gen-wrap{text-align:center;padding:80px 40px;}
+.spin{width:44px;height:44px;border:2px solid var(--border);border-top-color:var(--brand-primary);border-radius:50%;animation:sp .9s linear infinite;margin:0 auto 24px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.gen-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.gen-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-primary);min-height:20px;}
+
+/* ══════════════════════════════════
+   PRD OUTPUT
+══════════════════════════════════ */
+.prd-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.ptl-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--brand-primary);}
+.ptl-name{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--text);}
+.tbar-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.tbtn{background:var(--surface2);border:1px solid var(--border);color:var(--mid);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:6px 14px;border-radius:4px;cursor:pointer;transition:all .15s;}
+.tbtn:hover{border-color:var(--gold);color:var(--gold);}
+.tbtn-p{background:var(--brand-primary);color:var(--bg);border-color:var(--brand-primary);font-weight:700;}
+.tbtn-p:hover{filter:brightness(1.1);color:var(--bg);}
+.prd-doc{background:#fff;color:#1a1a2e;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);padding:52px 60px;font-family:'DM Sans',Georgia,sans-serif;font-size:14px;line-height:1.75;}
+.prd-doc h1{font-family:'Fraunces',serif;font-size:24px;font-weight:900;color:#0d1117;border-bottom:2px solid #0d1117;padding-bottom:10px;margin-bottom:7px;}
+.prd-doc .dmeta{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;color:#888;margin-bottom:28px;font-family:'IBM Plex Mono',monospace;}
+.prd-doc h2{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:#1a3a5c;margin:32px 0 10px;padding-left:10px;border-left:3px solid #e8a020;}
+.prd-doc h3{font-size:12px;font-weight:600;color:#2c3e50;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 7px;}
+.prd-doc h4{font-size:13px;font-weight:600;color:#3a4f6a;margin:14px 0 5px;font-style:italic;}
+.prd-doc p{margin-bottom:9px;color:#2d3748;}
+.prd-doc ul,.prd-doc ol{margin:5px 0 12px 20px;}
+.prd-doc li{margin-bottom:4px;color:#2d3748;}
+.prd-doc strong{color:#1a1a2e;}
+.comp-summary-banner{background:#fff8e6;border:1px solid #e8a020;border-radius:4px;padding:14px 18px;margin-bottom:24px;}
+.csb-title{font-size:12px;font-weight:700;color:#8a5c00;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.csb-items{font-size:13px;color:#5a4000;line-height:1.7;}
+
+/* ══════════════════════════════════
+   SETTINGS PANEL
+══════════════════════════════════ */
+.settings-panel{position:fixed;right:0;top:0;bottom:0;width:420px;background:var(--surface);border-left:1px solid var(--border);z-index:300;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;display:flex;flex-direction:column;}
+.settings-panel.open{transform:translateX(0);}
+.sp-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1;}
+.sp-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.sp-close{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1;padding:4px;}
+.sp-close:hover{color:var(--text);}
+.sp-body{padding:24px;flex:1;}
+.sp-section{margin-bottom:32px;}
+.sp-section-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.sp-field{margin-bottom:16px;}
+.sp-label{font-size:13px;color:var(--mid);margin-bottom:6px;display:block;}
+.sp-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 13px;outline:none;transition:border-color .2s;}
+.sp-input:focus{border-color:var(--gold);}
+.sp-hint{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.5;}
+.color-row{display:flex;gap:8px;align-items:center;}
+.color-swatch{width:28px;height:28px;border-radius:4px;border:1px solid var(--border);cursor:pointer;transition:transform .15s;}
+.color-swatch:hover{transform:scale(1.1);}
+.color-swatch.active{outline:2px solid var(--text);outline-offset:2px;}
+
+/* Role name editor */
+.role-name-editor{display:flex;flex-direction:column;gap:8px;}
+.rne-row{display:flex;align-items:center;gap:8px;}
+.rne-icon{font-size:16px;width:24px;text-align:center;}
+.rne-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:7px 10px;outline:none;transition:border-color .2s;}
+.rne-input:focus{border-color:var(--gold);}
+
+/* Custom questions editor */
+.cq-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.cq-item{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;}
+.cq-text{flex:1;font-size:13px;color:var(--mid);line-height:1.5;}
+.cq-del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px;line-height:1;padding:0;flex-shrink:0;}
+.cq-del:hover{color:var(--red);}
+.cq-add-area{display:flex;flex-direction:column;gap:6px;}
+.cq-add-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:8px 11px;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s;}
+.cq-add-input:focus{border-color:var(--gold);}
+
+/* Compliance default checkboxes */
+.comp-defaults{display:flex;flex-direction:column;gap:6px;}
+.cd-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:5px 0;}
+.cd-item input{accent-color:var(--gold);width:14px;height:14px;cursor:pointer;}
+.cd-item span{font-size:13px;color:var(--mid);}
+
+/* Settings overlay */
+.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:299;display:none;}
+.settings-overlay.on{display:block;}
+
+/* ══════════════════════════════════
+   SESSION MODAL
+══════════════════════════════════ */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;display:none;align-items:center;justify-content:center;}
+.modal-ov.on{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:420px;width:90%;animation:fu .25s ease;position:relative;}
+.modal h3{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.modal p{font-size:13px;color:var(--mid);margin-bottom:18px;line-height:1.6;}
+.modal-x{position:absolute;top:14px;right:16px;font-size:18px;color:var(--dim);cursor:pointer;background:none;border:none;line-height:1;}
+
+@media(max-width:640px){
+  .main{padding:24px 18px 60px;}
+  .prd-doc{padding:26px 18px;}
+  .qcard{padding:22px 18px;}
+  .land-grid{grid-template-columns:1fr;}
+  .role-grid{grid-template-columns:1fr;}
+  .settings-panel{width:100%;}
+  .hdr-in{padding:10px 18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SETTINGS OVERLAY -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="sp-header">
+    <div class="sp-title">⚙️ Platform Settings</div>
+    <button class="sp-close" onclick="closeSettings()">✕</button>
+  </div>
+  <div class="sp-body">
+
+    <!-- Branding -->
+    <div class="sp-section">
+      <div class="sp-section-title">Branding</div>
+      <div class="sp-field">
+        <label class="sp-label">Company / Organization Name</label>
+        <input class="sp-input" id="set_company" placeholder="e.g. Justice Innovations" oninput="applySettings()">
+        <div class="sp-hint">Appears in the header and on generated PRDs.</div>
+      </div>
+      <div class="sp-field">
+        <label class="sp-label">Platform Name</label>
+        <input class="sp-input" id="set_platname" placeholder="e.g. PRD Builder" oninput="applySettings()">
+      </div>
+      <div class="sp-field">
+        <label class="sp-label">Brand Color</label>
+        <div class="color-row">
+          <div class="color-swatch active" style="background:#e8a020" data-color="#e8a020" onclick="setBrandColor('#e8a020',this)" title="Gold"></div>
+          <div class="color-swatch" style="background:#4a9eff" data-color="#4a9eff" onclick="setBrandColor('#4a9eff',this)" title="Blue"></div>
+          <div class="color-swatch" style="background:#3fb950" data-color="#3fb950" onclick="setBrandColor('#3fb950',this)" title="Green"></div>
+          <div class="color-swatch" style="background:#bc8cff" data-color="#bc8cff" onclick="setBrandColor('#bc8cff',this)" title="Purple"></div>
+          <div class="color-swatch" style="background:#f85149" data-color="#f85149" onclick="setBrandColor('#f85149',this)" title="Red"></div>
+          <input type="color" id="customColor" style="width:28px;height:28px;border-radius:4px;border:1px solid var(--border);cursor:pointer;background:none;padding:0;" title="Custom color" onchange="setBrandColor(this.value,null)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Role Names -->
+    <div class="sp-section">
+      <div class="sp-section-title">Role Names</div>
+      <div class="sp-hint" style="margin-bottom:10px;">Rename roles to match your organization's terminology.</div>
+      <div class="role-name-editor">
+        <div class="rne-row"><div class="rne-icon">💡</div><input class="rne-input" id="rname_founder" placeholder="Founder / Entrepreneur" oninput="applySettings()"></div>
+        <div class="rne-row"><div class="rne-icon">📋</div><input class="rne-input" id="rname_pm" placeholder="Product Manager / COO" oninput="applySettings()"></div>
+        <div class="rne-row"><div class="rne-icon">⚙️</div><input class="rne-input" id="rname_developer" placeholder="Developer / Tech Lead" oninput="applySettings()"></div>
+        <div class="rne-row"><div class="rne-icon">🔵</div><input class="rne-input" id="rname_leo" placeholder="Law Enforcement / Agency" oninput="applySettings()"></div>
+      </div>
+    </div>
+
+    <!-- Default Compliance Frameworks -->
+    <div class="sp-section">
+      <div class="sp-section-title">Default Compliance Frameworks</div>
+      <div class="sp-hint" style="margin-bottom:10px;">Check the frameworks that typically apply to your products. These will be pre-flagged in the compliance screener.</div>
+      <div class="comp-defaults">
+        <label class="cd-item"><input type="checkbox" id="cdef_cjis" value="CJIS"><span>CJIS Security Policy</span></label>
+        <label class="cd-item"><input type="checkbox" id="cdef_fedramp" value="FedRAMP"><span>FedRAMP</span></label>
+        <label class="cd-item"><input type="checkbox" id="cdef_stateramp" value="StateRAMP"><span>StateRAMP</span></label>
+        <label class="cd-item"><input type="checkbox" id="cdef_cisa" value="CISA CPGs"><span>CISA Cybersecurity Performance Goals</span></label>
+        <label class="cd-item"><input type="checkbox" id="cdef_cmmc" value="CMMC"><span>CMMC</span></label>
+        <label class="cd-item"><input type="checkbox" id="cdef_txramp" value="TX-RAMP"><span>TX-RAMP (Texas)</span></label>
+        <label class="cd-item"><input type="checkbox" id="cdef_hipaa" value="HIPAA"><span>HIPAA</span></label>
+        <label class="cd-item"><input type="checkbox" id="cdef_soc2" value="SOC2"><span>SOC 2 Type II</span></label>
+      </div>
+    </div>
+
+    <!-- Custom Questions -->
+    <div class="sp-section">
+      <div class="sp-section-title">Custom Questions</div>
+      <div class="sp-hint" style="margin-bottom:10px;">Add questions that will appear for all roles. Use this for organization-specific requirements.</div>
+      <div class="cq-list" id="customQList"></div>
+      <div class="cq-add-area">
+        <textarea class="cq-add-input" id="newCQInput" rows="2" placeholder="Type a custom question to add..."></textarea>
+        <button class="btn btn-ghost" style="align-self:flex-start;font-size:13px;padding:7px 16px;" onclick="addCustomQ()">+ Add Question</button>
+      </div>
+    </div>
+
+    <div style="padding-top:16px;border-top:1px solid var(--border);">
+      <button class="btn btn-gold" style="width:100%" onclick="saveSettings()">Save Settings</button>
+      <button class="btn btn-ghost" style="width:100%;margin-top:8px;font-size:13px;" onclick="resetSettings()">Reset to Defaults</button>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="modal-ov" id="sessionModal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal('sessionModal')">✕</button>
+    <h3>Session Code</h3>
+    <p>Share this code with anyone who should contribute to this PRD. They'll enter it on the home screen to join your session.</p>
+    <div style="text-align:center;margin:18px 0;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:32px;letter-spacing:.3em;color:var(--gold);" id="modalCode">—</div>
+    </div>
+    <button class="btn btn-gold" style="width:100%;margin-bottom:8px" onclick="copyCode();closeModal('sessionModal')">Copy Code & Close</button>
+    <div id="modalContribs" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-in">
+    <div class="logo" onclick="goHome()">
+      <div class="lmark" id="logoMark">P</div>
+      <div>
+        <div class="lname" id="logoName">PRD Builder</div>
+        <div class="lsub" id="logoSub">Product Requirements · v5</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="prog-wrap" id="progWrap">
+        <div class="prog-lbl"><span id="progSect">—</span><span id="progPct">0%</span></div>
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      </div>
+      <button class="hpill blue" id="roleSwitcher" style="display:none" onclick="switchRole()">⇄ Switch Role</button>
+      <button class="hpill" id="sessionPill" style="display:none" onclick="openModal('sessionModal')">Session: <span id="pillCode">—</span></button>
+      <button class="hpill" onclick="openSettings()">⚙ Settings</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══ LANDING ══ -->
+  <div id="scrLand" class="scr on">
+    <div class="land-hero">
+      <div class="eyebrow" id="landEyebrow">Product Development</div>
+      <h1 id="landTitle">Build Your Product<br>Requirements Document</h1>
+      <p id="landDesc">Answer guided questions tailored to your role. One person or a whole team — each contributor adds their piece. When ready, generate a complete PRD your developers can build from.</p>
+    </div>
+    <div class="land-grid">
+      <div class="acard" onclick="startNew()">
+        <div class="acard-icon">✦</div>
+        <div class="acard-title">Start New PRD</div>
+        <div class="acard-desc">Begin a new product document. About 10–15 minutes per role.</div>
+      </div>
+      <div class="acard" onclick="toggleJoin()">
+        <div class="acard-icon">🔗</div>
+        <div class="acard-title">Join a Session</div>
+        <div class="acard-desc">Have a session code? Enter it to add your contribution.</div>
+      </div>
+    </div>
+    <div class="join-area" id="joinArea">
+      <div class="divider">Enter your 6-character session code</div>
+      <div class="join-box">
+        <input type="text" id="joinInput" maxlength="6" placeholder="e.g. JX7K2M" oninput="this.value=this.value.toUpperCase()">
+        <button class="btn btn-gold" onclick="joinSession()">Join →</button>
+      </div>
+      <div class="join-err" id="joinErr"></div>
+    </div>
+  </div>
+
+  <!-- ══ COMPLIANCE SCREENER ══ -->
+  <div id="scrComp" class="scr">
+    <div class="comp-header">
+      <h2>Quick Compliance Check</h2>
+      <p>Before we start, a few quick questions help us understand what compliance and security requirements will affect your product — and flag them at the right moments. <strong style="color:var(--text)">No technical knowledge needed.</strong></p>
+    </div>
+    <div class="comp-intro-card">
+      <p>🛡️ <strong>Why does this matter?</strong> Compliance requirements affect how software gets built — the database design, where it's hosted, what security features are required, and how much it costs. Knowing early saves time and money. We'll explain everything in plain language as we go.</p>
+    </div>
+    <div class="screener-qs" id="screenerQs"></div>
+    <div class="comp-results" id="compResults">
+      <div class="comp-results-title">Based on your answers, here's what to be aware of:</div>
+      <div class="comp-flags" id="compFlags"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;flex-wrap:wrap;gap:12px;">
+      <button class="btn btn-ghost" onclick="show('scrLand')">← Back</button>
+      <button class="btn btn-gold btn-big" id="compNextBtn" onclick="show('scrRole')">Continue to Questionnaire →</button>
+    </div>
+  </div>
+
+  <!-- ══ ROLE PICKER ══ -->
+  <div id="scrRole" class="scr">
+    <div class="role-hdr">
+      <h2 id="roleHdrTitle">Who's filling this out?</h2>
+      <p id="roleHdrDesc">Pick the role that best describes you. Your questions will be tailored to what you know. Switch roles any time or answer as multiple roles to fill in more of the picture.</p>
+    </div>
+    <div class="sess-status" id="sessStatus">
+      <div class="ss-title">Session Progress</div>
+      <div class="ss-grid" id="ssGrid"></div>
+      <div class="ss-code-row">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;">Share code</div>
+          <div class="ss-code" id="ssCode">—</div>
+        </div>
+        <button class="cpybtn" onclick="copyCode()">Copy</button>
+        <div style="font-size:12px;color:var(--dim);font-style:italic;">Send to teammates to add their section</div>
+      </div>
+    </div>
+    <div class="role-grid" id="roleGrid">
+      <div class="rcard" data-role="founder" onclick="pickRole('founder',this)">
+        <div class="rc-icon">💡</div>
+        <div class="rc-name" id="rn_founder">Founder / Entrepreneur</div>
+        <div class="rc-desc">You have the vision. Plain-language questions, no jargon required.</div>
+      </div>
+      <div class="rcard" data-role="pm" onclick="pickRole('pm',this)">
+        <div class="rc-icon">📋</div>
+        <div class="rc-name" id="rn_pm">Product Manager / COO</div>
+        <div class="rc-desc">You bridge vision and execution — users, priorities, timelines.</div>
+      </div>
+      <div class="rcard" data-role="developer" onclick="pickRole('developer',this)">
+        <div class="rc-icon">⚙️</div>
+        <div class="rc-name" id="rn_developer">Developer / Tech Lead</div>
+        <div class="rc-desc">Precise specs — architecture, APIs, performance, security details.</div>
+      </div>
+      <div class="rcard" data-role="leo" onclick="pickRole('leo',this)">
+        <div class="rc-icon">🔵</div>
+        <div class="rc-name" id="rn_leo">Law Enforcement / Agency</div>
+        <div class="rc-desc">You're the end user. Operational language — what officers need.</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <button class="btn btn-ghost" id="roleBackBtn" onclick="show('scrLand')" style="visibility:hidden">← Back</button>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-ghost" id="generateFromRoleBtn" onclick="generatePRD()" style="display:none">✦ Generate PRD Now</button>
+        <button class="btn btn-gold btn-big" id="roleStartBtn" onclick="beginQuestions()" disabled>Start Questions →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ QUESTIONS ══ -->
+  <div id="scrQ" class="scr">
+    <div class="q-topbar">
+      <div class="q-badge"><div class="q-dot" id="qDot"></div><span id="qRoleLbl">—</span></div>
+      <div class="q-ctr" id="qCtr">Question 1 of 12</div>
+    </div>
+    <div id="qWrap"></div>
+    <div class="qnav">
+      <button class="btn btn-ghost" id="qBack" onclick="prevQ()">← Back</button>
+      <div class="qnav-r">
+        <button class="skip-lnk" id="qSkip" onclick="skipQ()" style="display:none">Skip</button>
+        <button class="btn btn-gold" id="qNext" onclick="nextQ()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION DONE ══ -->
+  <div id="scrDone" class="scr">
+    <div class="done-wrap">
+      <div style="font-size:44px;margin-bottom:18px;">✓</div>
+      <h2 id="doneTitle">Section saved!</h2>
+      <p id="doneDesc">Your answers have been saved. Share the code below so others can contribute — or generate the PRD now.</p>
+      <div class="done-contribs" id="doneContribs"></div>
+      <div class="done-code-box">
+        <div class="dcb-lbl">Session Code — share with contributors</div>
+        <div class="dcb-code" id="doneCode">—</div>
+        <button class="cpybtn" onclick="copyCode()" style="margin-bottom:8px;">Copy Code</button>
+        <div class="dcb-hint">Anyone with this code can enter it on the home screen to add their section.</div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="show('scrRole');updateRoleStatus()">+ Add Another Role</button>
+        <button class="btn btn-gold btn-big" onclick="generatePRD()">✦ Generate PRD</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GENERATING ══ -->
+  <div id="scrGen" class="scr">
+    <div class="gen-wrap">
+      <div class="spin"></div>
+      <div class="gen-title">Building your PRD</div>
+      <div class="gen-lbl" id="genLbl">Analyzing responses...</div>
+      <p style="color:var(--dim);font-size:13px;margin-top:14px;">Usually 20–40 seconds</p>
+    </div>
+  </div>
+
+  <!-- ══ PRD OUTPUT ══ -->
+  <div id="scrPRD" class="scr">
+    <div class="prd-bar">
+      <div>
+        <div class="ptl-tag">Product Requirements Document</div>
+        <div class="ptl-name" id="prdName">—</div>
+      </div>
+      <div class="tbar-btns">
+        <button class="tbtn" onclick="show('scrRole');updateRoleStatus()">+ Add Contributor</button>
+        <button class="tbtn" onclick="if(confirm('Regenerate?'))generatePRD()">↺ Regenerate</button>
+        <button class="tbtn" onclick="startOver()">New PRD</button>
+        <button class="tbtn tbtn-p" onclick="downloadDoc()" id="dlBtn">⬇ Download Word Doc</button>
+      </div>
+    </div>
+    <div class="prd-doc" id="prdDoc"></div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  SETTINGS
+// ══════════════════════════════════════════════════════════════
+const DEFAULT_SETTINGS = {
+  company: 'Justice Innovations',
+  platname: 'PRD Builder',
+  brandColor: '#e8a020',
+  roleNames: { founder:'Founder / Entrepreneur', pm:'Product Manager / COO', developer:'Developer / Tech Lead', leo:'Law Enforcement / Agency' },
+  defaultCompliance: [],
+  customQuestions: [],
+};
+
+let S = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+
+function loadSettings() {
+  try { const r = localStorage.getItem('prd_settings'); if(r) S = { ...DEFAULT_SETTINGS, ...JSON.parse(r), roleNames: { ...DEFAULT_SETTINGS.roleNames, ...(JSON.parse(r).roleNames||{}) } }; } catch(e){}
+  populateSettingsUI();
+  applySettings();
+}
+
+function populateSettingsUI() {
+  document.getElementById('set_company').value = S.company||'';
+  document.getElementById('set_platname').value = S.platname||'';
+  document.getElementById('rname_founder').value = S.roleNames.founder !== DEFAULT_SETTINGS.roleNames.founder ? S.roleNames.founder : '';
+  document.getElementById('rname_pm').value = S.roleNames.pm !== DEFAULT_SETTINGS.roleNames.pm ? S.roleNames.pm : '';
+  document.getElementById('rname_developer').value = S.roleNames.developer !== DEFAULT_SETTINGS.roleNames.developer ? S.roleNames.developer : '';
+  document.getElementById('rname_leo').value = S.roleNames.leo !== DEFAULT_SETTINGS.roleNames.leo ? S.roleNames.leo : '';
+  ['cjis','fedramp','stateramp','cisa','cmmc','txramp','hipaa','soc2'].forEach(k => {
+    const el = document.getElementById('cdef_'+k);
+    if(el) el.checked = S.defaultCompliance.includes(el.value);
+  });
+  renderCustomQList();
+  highlightSwatch(S.brandColor);
+}
+
+function applySettings() {
+  const company = document.getElementById('set_company').value.trim() || DEFAULT_SETTINGS.company;
+  const platname = document.getElementById('set_platname').value.trim() || DEFAULT_SETTINGS.platname;
+  document.getElementById('logoName').textContent = platname;
+  document.getElementById('logoSub').textContent = company;
+  document.getElementById('logoMark').textContent = (platname||'P')[0].toUpperCase();
+  document.getElementById('pageTitle').textContent = platname + (company ? ' — ' + company : '');
+  document.getElementById('landEyebrow').textContent = company + ' — Product Development';
+
+  // Role names
+  const fn = document.getElementById('rname_founder').value.trim() || DEFAULT_SETTINGS.roleNames.founder;
+  const pm = document.getElementById('rname_pm').value.trim() || DEFAULT_SETTINGS.roleNames.pm;
+  const dv = document.getElementById('rname_developer').value.trim() || DEFAULT_SETTINGS.roleNames.developer;
+  const le = document.getElementById('rname_leo').value.trim() || DEFAULT_SETTINGS.roleNames.leo;
+  document.getElementById('rn_founder').textContent = fn;
+  document.getElementById('rn_pm').textContent = pm;
+  document.getElementById('rn_developer').textContent = dv;
+  document.getElementById('rn_leo').textContent = le;
+  ROLE_META.founder.label = fn;
+  ROLE_META.pm.label = pm;
+  ROLE_META.developer.label = dv;
+  ROLE_META.leo.label = le;
+}
+
+function saveSettings() {
+  S.company = document.getElementById('set_company').value.trim() || DEFAULT_SETTINGS.company;
+  S.platname = document.getElementById('set_platname').value.trim() || DEFAULT_SETTINGS.platname;
+  S.roleNames.founder = document.getElementById('rname_founder').value.trim() || DEFAULT_SETTINGS.roleNames.founder;
+  S.roleNames.pm = document.getElementById('rname_pm').value.trim() || DEFAULT_SETTINGS.roleNames.pm;
+  S.roleNames.developer = document.getElementById('rname_developer').value.trim() || DEFAULT_SETTINGS.roleNames.developer;
+  S.roleNames.leo = document.getElementById('rname_leo').value.trim() || DEFAULT_SETTINGS.roleNames.leo;
+  S.defaultCompliance = ['cjis','fedramp','stateramp','cisa','cmmc','txramp','hipaa','soc2'].filter(k => document.getElementById('cdef_'+k)?.checked).map(k => document.getElementById('cdef_'+k).value);
+  try { localStorage.setItem('prd_settings', JSON.stringify(S)); } catch(e){}
+  applySettings();
+  closeSettings();
+  // Pre-check compliance defaults in screener
+  applyDefaultCompliance();
+}
+
+function resetSettings() {
+  if (!confirm('Reset all settings to defaults?')) return;
+  S = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+  try { localStorage.removeItem('prd_settings'); } catch(e){}
+  populateSettingsUI();
+  applySettings();
+}
+
+function setBrandColor(color, el) {
+  document.documentElement.style.setProperty('--brand-primary', color);
+  S.brandColor = color;
+  highlightSwatch(color);
+  applySettings();
+}
+
+function highlightSwatch(color) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('active', s.dataset.color === color));
+}
+
+function addCustomQ() {
+  const val = document.getElementById('newCQInput').value.trim();
+  if (!val) return;
+  S.customQuestions.push(val);
+  document.getElementById('newCQInput').value = '';
+  renderCustomQList();
+}
+
+function removeCustomQ(i) {
+  S.customQuestions.splice(i, 1);
+  renderCustomQList();
+}
+
+function renderCustomQList() {
+  document.getElementById('customQList').innerHTML = S.customQuestions.map((q,i) =>
+    `<div class="cq-item"><div class="cq-text">${esc(q)}</div><button class="cq-del" onclick="removeCustomQ(${i})">✕</button></div>`
+  ).join('');
+}
+
+function openSettings() { document.getElementById('settingsPanel').classList.add('open'); document.getElementById('settingsOverlay').classList.add('on'); }
+function closeSettings() { document.getElementById('settingsPanel').classList.remove('open'); document.getElementById('settingsOverlay').classList.remove('on'); }
+
+// ══════════════════════════════════════════════════════════════
+//  COMPLIANCE SCREENER
+// ══════════════════════════════════════════════════════════════
+const SCREENER = [
+  { id:'crim_records', text:'Will officers or staff use this software to look up a person\'s criminal history or background?', hint:'For example: checking if someone has prior arrests, warrants, or convictions.', yesFlags:['CJIS'] },
+  { id:'fed_agency', text:'Will this product be used by or sold to a federal agency (FBI, DHS, DOJ, etc.)?', hint:'Or does it need to integrate with federal systems or receive federal funding?', yesFlags:['FedRAMP'] },
+  { id:'state_gov', text:'Will this be used by state or local government agencies in Texas or other states that have cloud security requirements?', hint:'Many states require certified cloud platforms for government software.', yesFlags:['StateRAMP','TX-RAMP'] },
+  { id:'dod', text:'Does this product involve Department of Defense contracts, contractors, or DoD data?', hint:'Even indirect involvement — like a contractor who works with the DoD.', yesFlags:['CMMC'] },
+  { id:'health_data', text:'Will the system store or handle any medical, mental health, or substance abuse records?', hint:'This includes mental health evaluations, medical records, or treatment history of any individuals.', yesFlags:['HIPAA'] },
+  { id:'sensitive_infra', text:'Is this software part of critical public infrastructure — like emergency response, corrections, courts, or public safety systems?', hint:'These systems have elevated cybersecurity expectations from the federal government.', yesFlags:['CISA CPGs'] },
+];
+
+const FRAMEWORK_INFO = {
+  'CJIS': {
+    icon:'🔐', level:'warn',
+    name:'CJIS Security Policy',
+    desc:'Because your system accesses criminal history data, it must comply with the FBI\'s Criminal Justice Information Services (CJIS) Security Policy. This is one of the most demanding compliance requirements in law enforcement technology.',
+    impact:'Affects: <span>Hosting environment (must be CJIS-approved), multi-factor authentication required, strict audit logging, background checks for all personnel with system access, encryption standards, and contractual agreements with the FBI\'s CJIS Division. Confirm specific requirements with your state\'s CJIS Systems Agency (CSA).</span>',
+  },
+  'FedRAMP': {
+    icon:'🏛️', level:'warn',
+    name:'FedRAMP Authorization',
+    desc:'Federal agencies require cloud services to be FedRAMP authorized. If you\'re selling to federal customers, your cloud hosting and services must either be FedRAMP-authorized or you must pursue authorization.',
+    impact:'Affects: <span>Cloud provider choice, significant security documentation, third-party assessment costs ($250K–$1M+), and timeline (12–18 months for authorization). Often requires a government-focused cloud like AWS GovCloud.</span>',
+  },
+  'StateRAMP': {
+    icon:'🏢', level:'info',
+    name:'StateRAMP',
+    desc:'StateRAMP is the state-government equivalent of FedRAMP. Some states require this certification for cloud software used by state agencies.',
+    impact:'Affects: <span>Cloud hosting requirements and security documentation. Less intensive than FedRAMP but still requires third-party assessment. Check requirements with each target state agency.</span>',
+  },
+  'TX-RAMP': {
+    icon:'⭐', level:'info',
+    name:'TX-RAMP (Texas)',
+    desc:'Texas requires cloud service providers to be TX-RAMP certified before state agencies can purchase or use their software. If targeting Texas agencies, this is mandatory.',
+    impact:'Affects: <span>Texas state agency sales require certification. Two-level program (Level 1 for lower-risk, Level 2 for higher-risk). Required before contract execution with Texas agencies.</span>',
+  },
+  'CMMC': {
+    icon:'🛡️', level:'warn',
+    name:'CMMC (Cybersecurity Maturity Model Certification)',
+    desc:'Department of Defense contracts require CMMC certification. This is mandatory for any contractor in the DoD supply chain.',
+    impact:'Affects: <span>Third-party assessment required for Level 2+, significant investment in security controls and documentation, ongoing compliance maintenance. Required before DoD contracts are awarded.</span>',
+  },
+  'HIPAA': {
+    icon:'🏥', level:'warn',
+    name:'HIPAA Compliance',
+    desc:'Any system storing Protected Health Information (PHI) — including mental health records — must comply with HIPAA. This applies to the software and to your organization.',
+    impact:'Affects: <span>Encryption requirements, access controls, Business Associate Agreements (BAAs) with all vendors, breach notification procedures, and audit trails. Non-compliance penalties are severe.</span>',
+  },
+  'CISA CPGs': {
+    icon:'🔒', level:'note',
+    name:'CISA Cybersecurity Performance Goals',
+    desc:'CISA\'s CPGs are recommended baseline security practices for critical infrastructure. While not legally mandatory, agencies increasingly expect vendors to follow them.',
+    impact:'Affects: <span>Security baseline practices including MFA, asset inventory, vulnerability management, and incident response. Good security hygiene that often overlaps with other frameworks.</span>',
+  },
+};
+
+let screenerAnswers = {};
+let detectedFrameworks = [];
+
+function buildScreener() {
+  const container = document.getElementById('screenerQs');
+  container.innerHTML = SCREENER.map(q => `
+    <div class="sq" id="sq_${q.id}">
+      <div class="sq-text">${q.text}</div>
+      ${q.hint ? `<div class="sq-hint">${q.hint}</div>` : ''}
+      <div class="sq-opts">
+        <div class="sq-opt" data-q="${q.id}" data-v="yes" onclick="answerScreener('${q.id}','yes',this)">Yes</div>
+        <div class="sq-opt" data-q="${q.id}" data-v="no" onclick="answerScreener('${q.id}','no',this)">No</div>
+        <div class="sq-opt" data-q="${q.id}" data-v="unsure" onclick="answerScreener('${q.id}','unsure',this)">Not sure</div>
+      </div>
+    </div>`).join('');
+
+  // Pre-apply default compliance from settings
+  applyDefaultCompliance();
+}
+
+function applyDefaultCompliance() {
+  if (S.defaultCompliance.length > 0) {
+    detectedFrameworks = [...S.defaultCompliance];
+    showCompResults();
+  }
+}
+
+function answerScreener(qid, val, el) {
+  document.querySelectorAll(`[data-q="${qid}"]`).forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  screenerAnswers[qid] = val;
+
+  // Recalculate detected frameworks
+  detectedFrameworks = [...S.defaultCompliance];
+  SCREENER.forEach(q => {
+    if (screenerAnswers[q.id] === 'yes' || screenerAnswers[q.id] === 'unsure') {
+      q.yesFlags.forEach(f => { if (!detectedFrameworks.includes(f)) detectedFrameworks.push(f); });
+    }
+  });
+
+  if (detectedFrameworks.length > 0) showCompResults();
+}
+
+function showCompResults() {
+  const res = document.getElementById('compResults');
+  const flags = document.getElementById('compFlags');
+  if (detectedFrameworks.length === 0) { res.style.display = 'none'; return; }
+  res.style.display = 'block';
+  flags.innerHTML = detectedFrameworks.map(f => {
+    const info = FRAMEWORK_INFO[f];
+    if (!info) return '';
+    return `<div class="cflag ${info.level}">
+      <div class="cflag-icon">${info.icon}</div>
+      <div class="cflag-body">
+        <div class="cflag-name">${info.name}</div>
+        <div class="cflag-desc">${info.desc}</div>
+        <div class="cflag-impact">${info.impact}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  QUESTION BANKS
+// ══════════════════════════════════════════════════════════════
+const ROLE_META = {
+  founder:   { label:'Founder / Entrepreneur',      color:'#e8a020', icon:'💡' },
+  pm:        { label:'Product Manager / COO',        color:'#4a9eff', icon:'📋' },
+  developer: { label:'Developer / Tech Lead',        color:'#3fb950', icon:'⚙️' },
+  leo:       { label:'Law Enforcement / Agency Rep', color:'#bc8cff', icon:'🔵' },
+};
+
+// Compliance nudges keyed by question id
+const COMP_NUDGES = {
+  must_haves: { frameworks:['CJIS'], text:'If any feature involves criminal records or FBI data, your developer will need to know — it changes how this feature gets built and what security is required.' },
+  who_uses: { frameworks:['CJIS','FedRAMP'], text:'The roles you define here determine who needs background checks and what level of system access control is required under your compliance frameworks.' },
+  integrations: { frameworks:['CJIS'], text:'Connecting to FBI/NCIC databases or state criminal records systems requires CJIS-compliant data transmission and special authorization. Flag these specifically for your developer.' },
+  tech_stack: { frameworks:['FedRAMP','CJIS','StateRAMP'], text:'Compliance requirements restrict your cloud provider choices. FedRAMP requires AWS GovCloud, Azure Government, or similar. CJIS requires approved hosting environments.' },
+  security: { frameworks:['CJIS','FedRAMP','HIPAA'], text:'Your detected compliance frameworks have specific, mandatory security control requirements. Your developer will need to reference the relevant framework documentation directly.' },
+  data_types: { frameworks:['HIPAA'], text:'If any stored files contain medical or mental health information, HIPAA applies to that data and affects how it must be encrypted, accessed, and retained.' },
+  data_sensitivity: { frameworks:['CJIS'], text:'FBI/NCIC data and criminal history records fall under CJIS. Every person with access to this data needs a background check and the system needs CJIS-compliant security controls.' },
+  access_concerns: { frameworks:['CJIS','FedRAMP'], text:'Your compliance frameworks require formal role-based access control with documented policies. The access boundaries you describe here become security requirements.' },
+};
+
+const Qs = {
+founder:[
+  {id:'name',sect:'The Big Picture',type:'text', text:"What's the name of the software you want to build?", hint:"Don't worry if it's not final.", ex:{l:'Examples',t:'"Intake" · "ColdCase" · "WitnessLink" · "Evidence Vault"'}},
+  {id:'summary',sect:'The Big Picture',type:'textarea', text:"Describe your product in plain language — like you're telling a friend with no tech background.", hint:"What does it do, for whom, and why does it matter?", ex:{l:'Example',t:'"ColdCase helps detectives keep track of old unsolved crimes in one place, so they can pick a case back up years later without losing anything."'}},
+  {id:'problem',sect:'The Big Picture',type:'textarea', text:"What painful problem does this solve today? What happens without it?", ex:{l:'Example',t:'"Cold case files sit in storage boxes. When a detective retires, their knowledge walks out the door."'}},
+  {id:'who_uses',sect:'Who Uses It',type:'textarea', text:"Who are the different types of people who will use this? List each type and what they need to do.", ex:{l:'Example',t:'"Lead detectives — enter and manage case info. Supervisors — review all cases. Records staff — upload old paper files."'}},
+  {id:'workflow',sect:'How It Works',type:'textarea', text:"Describe the step-by-step process a user follows when using this system from start to finish.", hint:"Walk through what someone actually does — step by step, in order.", ex:{l:'Example',t:'"Officer opens a case → enters incident facts → system analyzes statutes → system suggests charges → prosecutor confirms → officer proceeds."'}},
+  {id:'must_haves',sect:'What It Does',type:'textarea', text:"List the features this product must have on day one. Without these, it doesn't work.", ex:{l:'Example',t:'"Search by suspect name or case number. Attach photos and documents. Timeline of events. Assign cases to detectives."'}},
+  {id:'nice_to_haves',sect:'What It Does',type:'textarea', text:"What would you love eventually but don't need for the first version?", ex:{l:'Example',t:'"AI that finds connections between cases. Public tip portal. Mobile app for field use."'},required:false},
+  {id:'not_allowed',sect:'What It Does',type:'textarea', text:"Is there anything this system should specifically NOT do? Any hard limits?", ex:{l:'Example',t:'"Should never automatically decide charges. Should never share case info outside the agency without supervisor approval."'},required:false},
+  {id:'edge_cases',sect:'What It Does',type:'textarea', text:"What unusual or complicated situations could occur when using this system?", hint:"Think about the hard cases — ones that don't fit the normal workflow.", ex:{l:'Example',t:'"Multiple suspects in one incident. Juvenile suspects. Conflicting witness statements. Officer loses internet connection in the field."'},required:false},
+  {id:'who_approves',sect:'The Organization',type:'textarea', text:"Who needs to approve this before it can launch or be purchased?", ex:{l:'Example',t:'"Our CEO, lead developer, the Sheriff\'s IT security officer, and county legal."'}},
+  {id:'timeline',sect:'The Organization',type:'textarea', text:"Is there a deadline or important milestone driving when this needs to be ready?", ex:{l:'Example',t:'"We have a DOJ grant requiring a working demo by September. Pilot agency wants to test in Q4."'},required:false},
+  {id:'success',sect:'The Organization',type:'textarea', text:"How will you know this product is actually working and making a difference?", ex:{l:'Example',t:'"Cases re-opened 50% faster. Detectives spend less time searching archives."'}},
+  {id:'concerns',sect:'The Organization',type:'textarea', text:"What are you most worried about — technical, legal, political, or practical?", ex:{l:'Example',t:'"Worried about agencies changing habits. Unsure how to handle data from agencies in different states."'},required:false},
+],
+pm:[
+  {id:'name',sect:'Product Identity',type:'text', text:"Product name and version scope", ex:{l:'Example',t:'"Intake — Pre-Arrest Screening Tool, V1.0 (pilot release)"'}},
+  {id:'summary',sect:'Product Identity',type:'textarea', text:"Executive summary: product vision, target users, and core value proposition"},
+  {id:'personas',sect:'Users & Personas',type:'textarea', text:"Define each user persona: role, goals, pain points, tech comfort, usage frequency", ex:{l:'Example',t:'"Lead Detective: 8–12 active cases. Goals: quick evidence access. Pain: paper archives. Tech: moderate. Usage: daily."'}},
+  {id:'workflow',sect:'Users & Personas',type:'textarea', text:"Describe the step-by-step process a user follows when using this system from start to finish.", hint:"Map the primary workflow end-to-end. Include key decision points.", ex:{l:'Example',t:'"Officer opens a case → enters incident facts → system suggests charges → prosecutor confirms → officer proceeds with arrest or release."'}},
+  {id:'must_haves',sect:'Functional Requirements',type:'textarea', text:"All must-have functional requirements for V1, grouped by feature area", ex:{l:'Example',t:'"Case Mgmt: create/edit/archive, attach evidence, status workflow. Search: full-text across all fields, filter by status/detective/date."'}},
+  {id:'business_rules',sect:'Functional Requirements',type:'textarea', text:"What rules determine what the system recommends, flags, blocks, or requires?", hint:"Think about automated logic, thresholds, and decision triggers.", ex:{l:'Example',t:'"If BAC > .08 → recommend DWI charge. If firearm present → flag charge enhancement. If suspect is juvenile → require supervisor approval."'}},
+  {id:'key_entities',sect:'Functional Requirements',type:'textarea', text:"What are the primary things the system stores, tracks, or manages? List the core objects.", hint:"These become your database tables and API resources.", ex:{l:'Example',t:'"Case · Officer · Suspect · Evidence · Statute · Charge · Report · Agency"'}},
+  {id:'failure_modes',sect:'Functional Requirements',type:'textarea', text:"What system failures must be handled safely and gracefully?", hint:"What should happen when things go wrong — not just when they work.", ex:{l:'Example',t:'"Network outage during submission. Database unavailable. Evidence upload failure. Authentication timeout mid-session."'}},
+  {id:'nice_to_haves',sect:'Functional Requirements',type:'textarea', text:"Phase 2 and backlog items — features deferred from V1 with rationale",required:false},
+  {id:'not_allowed',sect:'Functional Requirements',type:'textarea', text:"Out of scope items and hard exclusions — what this system must never do"},
+  {id:'integrations',sect:'Integrations',type:'textarea', text:"Required integrations: systems, APIs, data sources this must connect to", ex:{l:'Example',t:'"Tyler RMS (read, required) · NCIC (read, required) · AD/SSO (auth, required)"'}},
+  {id:'nfr',sect:'Non-Functional Requirements',type:'textarea', text:"Performance, availability, scalability, accessibility requirements with measurable targets", ex:{l:'Example',t:'"Search < 2s at p95. 99.5% uptime business hours. 50 concurrent users at launch. WCAG 2.1 AA."'}},
+  {id:'compliance',sect:'Compliance',type:'multi', text:"Which compliance frameworks apply? Select all that are relevant.", choices:['CJIS Security Policy','FedRAMP','StateRAMP','CISA CPGs','CMMC','TX-RAMP','HIPAA','SOC 2 Type II','Not sure yet']},
+  {id:'auth_access',sect:'Security',type:'textarea', text:"Authentication, authorization, and access control requirements"},
+  {id:'audit',sect:'Security',type:'textarea', text:"Audit logging, data retention, and legal hold requirements"},
+  {id:'stakeholders',sect:'Governance',type:'textarea', text:"Stakeholder matrix: who approves, reviews, and is informed"},
+  {id:'timeline',sect:'Governance',type:'textarea', text:"Timeline, milestones, and budget constraints"},
+  {id:'risks',sect:'Governance',type:'textarea', text:"Known risks, assumptions, and dependencies",required:false},
+],
+developer:[
+  {id:'name',sect:'Scope',type:'text', text:"Product name and build scope", ex:{l:'Example',t:'"ColdCase — V1 backend API + React web frontend"'}},
+  {id:'summary',sect:'Scope',type:'textarea', text:"Technical summary: what this system does, primary data flows"},
+  {id:'key_entities',sect:'Scope',type:'textarea', text:"What are the primary things the system stores, tracks, or manages? List core data objects and key relationships.", ex:{l:'Example',t:'"Case · Officer · Suspect · Evidence · Statute · Charge · Report. Case has many Evidence; soft-delete and audit columns on all entities."'}},
+  {id:'tech_stack',sect:'Architecture',type:'textarea', text:"Required, preferred, or prohibited technology stack", ex:{l:'Example',t:'"Frontend: React+TypeScript. Backend: Node/FastAPI. DB: PostgreSQL. Cloud: AWS GovCloud. No Google Cloud per agency policy."'}},
+  {id:'scale',sect:'Architecture',type:'textarea', text:"Scale: concurrent users, data volume, growth, multi-tenancy needs", ex:{l:'Example',t:'"V1: 50 concurrent, 3 agencies. V2: 500 concurrent, 50 agencies, multi-tenant with logical data isolation."'}},
+  {id:'performance',sect:'Architecture',type:'textarea', text:"Performance SLOs: latency targets, throughput, error budgets", ex:{l:'Example',t:'"API p95 < 300ms. Search p95 < 1s. 99.5% availability. RTO < 4hr, RPO < 1hr."'}},
+  {id:'business_rules',sect:'Architecture',type:'textarea', text:"What rules determine what the system recommends, flags, blocks, or requires? Describe the decision logic.", hint:"These become backend validation rules or rule engines.", ex:{l:'Example',t:'"If BAC > .08 → recommend DWI. If firearm present → flag enhancement. Juvenile suspects → escalation workflow. All rule outcomes must be audited."'}},
+  {id:'failure_modes',sect:'Architecture',type:'textarea', text:"What system failures must be handled safely? Define expected error handling.", ex:{l:'Example',t:'"Network outage: queue locally, sync on reconnect. DB unavailable: read-only cache mode. Evidence upload failure: retry with idempotency key. Auth timeout: preserve form state."'}},
+  {id:'integrations',sect:'Integrations',type:'textarea', text:"External systems: protocols, auth methods, data formats", ex:{l:'Example',t:'"NCIC: REST/OAuth2/JSON. Tyler RMS: SOAP/NTLM. AD/LDAP for SSO. S3-compatible for evidence files."'}},
+  {id:'security',sect:'Security & Compliance',type:'textarea', text:"Security architecture: auth, encryption standards, network controls, audit trail, RBAC design"},
+  {id:'compliance',sect:'Security & Compliance',type:'multi', text:"Applicable compliance frameworks", choices:['CJIS Security Policy','FedRAMP Moderate','FedRAMP High','StateRAMP','CISA CPGs','CMMC Level 2','CMMC Level 3','TX-RAMP','HIPAA','SOC 2 Type II','NIST 800-53']},
+  {id:'data_model',sect:'Data',type:'textarea', text:"Core data entities, relationships, schema constraints", ex:{l:'Example',t:'"Entities: Agency, User, Case, Evidence, Suspect, Person, Timeline. All need soft delete + audit columns."'}},
+  {id:'data_types',sect:'Data',type:'textarea', text:"File/media types, storage requirements, size constraints, chain of custody needs", ex:{l:'Example',t:'"Images (≤50MB), video (≤2GB), PDF/DOCX. Evidence immutable after submission. SHA-256 checksums required."'}},
+  {id:'edge_cases',sect:'Constraints',type:'textarea', text:"What unusual or complicated situations must the system handle correctly?", ex:{l:'Example',t:'"Multiple suspects on one incident. Concurrent edits by two officers. Partial upload on slow connection. Record opened simultaneously by two users."'}},
+  {id:'constraints',sect:'Constraints',type:'textarea', text:"Browser support, network environment, device requirements, offline needs"},
+  {id:'must_haves',sect:'Functional Scope',type:'textarea', text:"V1 functional scope — what must be built vs. explicitly deferred"},
+  {id:'risks',sect:'Functional Scope',type:'textarea', text:"Technical risks, unknowns, dependencies that could affect delivery",required:false},
+],
+leo:[
+  {id:'name',sect:'About the Tool',type:'text', text:"What do you call this tool, or what would you like it to be called?"},
+  {id:'summary',sect:'About the Tool',type:'textarea', text:"In your own words, what should this software help you do?", ex:{l:'Example',t:'"Pull up everything we know about a suspect or a case in one place, without digging through a dozen different systems."'}},
+  {id:'daily_pain',sect:'The Problem Today',type:'textarea', text:"What's your biggest frustration with how things work today — without this tool?", ex:{l:'Example',t:'"Every time I pick up a cold case I spend two days figuring out what was already done. Notes are everywhere, evidence is labeled inconsistently."'}},
+  {id:'daily_workflow',sect:'The Problem Today',type:'textarea', text:"Walk me through a key workflow step by step — what actually happens in practice today?", ex:{l:'Example',t:'"I get assigned a cold case. I look for the old file — it\'s in storage. I wait 2 days, read hundreds of pages, make my own notes."'}},
+  {id:'workflow',sect:'The Problem Today',type:'textarea', text:"Describe how you'd want the new system to work — step by step, from opening it to completing a task.", ex:{l:'Example',t:'"I log in → search by suspect name → open the case → see a timeline of everything → attach my new notes → flag for supervisor review → close out."'}},
+  {id:'must_haves',sect:'What You Need',type:'textarea', text:"What features are absolutely essential? Without these you wouldn't use it.", ex:{l:'Example',t:'"Search by name, date, location, or crime type. Attach and view photos and documents. Work on my department laptop."'}},
+  {id:'business_rules',sect:'What You Need',type:'textarea', text:"What rules should the system automatically enforce or flag?", hint:"Situations where the system should warn you, block an action, or require a second approval.", ex:{l:'Example',t:'"Warn if I try to close a case with open evidence items. Block access to juvenile records unless I\'m assigned. Flag conflicting suspect descriptions."'},required:false},
+  {id:'edge_cases',sect:'What You Need',type:'textarea', text:"What unusual situations could come up that the system needs to handle?", ex:{l:'Example',t:'"Multiple suspects on the same incident. A suspect who is also a witness. Losing internet in the field mid-entry."'},required:false},
+  {id:'nice_to_haves',sect:'What You Need',type:'textarea', text:"What would be nice to have eventually but you could live without for now?",required:false},
+  {id:'access_concerns',sect:'Access & Security',type:'textarea', text:"Who in your agency should see what? Any records that need to be restricted?", ex:{l:'Example',t:'"Patrol officers shouldn\'t see active investigation details. Victim info restricted to assigned detective and supervisor."'}},
+  {id:'device_env',sect:'Access & Security',type:'single', text:"How would officers primarily access this?", choices:['Desktop computer at the station','Laptop between station and field','Mobile phone or tablet in the field','A mix of all of these']},
+  {id:'data_sensitivity',sect:'Access & Security',type:'multi', text:"What sensitive information will this system handle? Select all that apply.", choices:['Criminal history / rap sheets (FBI/NCIC data)','Victim personal information','Witness identities','Juvenile records','Mental health or medical information','Confidential informant information','Evidence chain of custody','Undercover operation details']},
+  {id:'existing_systems',sect:'Current Systems',type:'textarea', text:"What systems do you currently use that this should connect to or replace?", ex:{l:'Example',t:'"Tyler New World RMS. NCIC through a terminal. Separate evidence management. Everything else is paper or spreadsheets."'}},
+  {id:'training',sect:'Practicalities',type:'single', text:"How much training time would officers realistically have?", choices:['30 minutes or less — must be that intuitive','1–2 hours of formal training','A half-day session','Multiple days with ongoing support']},
+  {id:'success',sect:'Practicalities',type:'textarea', text:"Six months after launch, how will you know this tool is actually helping?", ex:{l:'Example',t:'"Detectives spend less time searching and more time investigating. Cold cases get re-opened that otherwise would have stayed cold."'}},
+],
+};
+
+// ══════════════════════════════════════════════════════════════
+//  SESSION STATE
+// ══════════════════════════════════════════════════════════════
+let session = { code:null, productName:'', contributions:{}, complianceData:{ answers:{}, frameworks:[] } };
+let currentRole=null, currentQs=[], currentQIdx=0, currentAnswers={};
+
+function genCode() {
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');
+}
+
+function saveSession() {
+  try { localStorage.setItem('prd_sess_'+session.code, JSON.stringify(session)); } catch(e){}
+}
+
+function loadSession(code) {
+  try { const r=localStorage.getItem('prd_sess_'+code); if(r){session=JSON.parse(r);return true;} } catch(e){}
+  return false;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════════════════
+function show(id) {
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goHome() { if(confirm('Go back to home? Your session is saved.')) { show('scrLand'); document.getElementById('progWrap').style.display='none'; document.getElementById('roleSwitcher').style.display='none'; } }
+
+function startNew() {
+  session = { code:genCode(), productName:'', contributions:{}, complianceData:{answers:{},frameworks:[]} };
+  saveSession();
+  screenerAnswers = {}; detectedFrameworks = [...S.defaultCompliance];
+  buildScreener();
+  updateHeaderSession();
+  document.getElementById('roleBackBtn').style.visibility='visible';
+  show('scrComp');
+}
+
+function toggleJoin() {
+  const ja=document.getElementById('joinArea');
+  ja.style.display = ja.style.display==='none'?'block':'none';
+}
+
+function joinSession() {
+  const code=document.getElementById('joinInput').value.trim().toUpperCase();
+  document.getElementById('joinErr').textContent='';
+  if(code.length!==6){document.getElementById('joinErr').textContent='Please enter a 6-character code.';return;}
+  if(!loadSession(code)){document.getElementById('joinErr').textContent='Session not found. Check the code and try again.';return;}
+  updateHeaderSession();
+  show('scrRole');
+  document.getElementById('roleBackBtn').style.visibility='visible';
+  updateRoleStatus();
+}
+
+function updateHeaderSession() {
+  if(session.code){
+    document.getElementById('sessionPill').style.display='inline-flex';
+    document.getElementById('pillCode').textContent=session.code;
+    document.getElementById('modalCode').textContent=session.code;
+    document.getElementById('ssCode').textContent=session.code;
+    document.getElementById('doneCode').textContent=session.code;
+  }
+}
+
+function updateRoleStatus() {
+  const roles=['founder','pm','developer','leo'];
+  const hasAny=roles.some(r=>session.contributions[r]);
+  const sessDiv=document.getElementById('sessStatus');
+  sessDiv.style.display=hasAny?'block':'none';
+  if(hasAny){
+    document.getElementById('ssGrid').innerHTML=roles.map(r=>{
+      const done=!!session.contributions[r]; const m=ROLE_META[r];
+      return `<div class="ss-item"><div class="ss-dot ${done?'done':''}"></div>${m.icon} ${m.label.split('/')[0].trim()}</div>`;
+    }).join('');
+    roles.forEach(r=>{
+      const c=document.querySelector(`.rcard[data-role="${r}"]`);
+      if(c){ c.classList.toggle('done-b',!!session.contributions[r]); }
+    });
+    document.getElementById('generateFromRoleBtn').style.display='inline-flex';
+  }
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(session.code).then(()=>{
+    document.querySelectorAll('.cpybtn').forEach(b=>{b.textContent='Copied!';});
+    setTimeout(()=>document.querySelectorAll('.cpybtn').forEach(b=>{b.textContent='Copy';}),2000);
+  }).catch(()=>{ alert('Code: '+session.code); });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ROLE SELECTION
+// ══════════════════════════════════════════════════════════════
+function pickRole(role,el) {
+  document.querySelectorAll('.rcard').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  currentRole=role;
+  document.getElementById('roleStartBtn').disabled=false;
+}
+
+function beginQuestions() {
+  if(!currentRole) return;
+  currentQs = buildQList(currentRole);
+  currentAnswers = { ...session.contributions[currentRole]||{} };
+  currentQIdx=0;
+  const m=ROLE_META[currentRole];
+  document.getElementById('qDot').style.background=m.color;
+  document.getElementById('qRoleLbl').textContent=m.label;
+  document.getElementById('roleSwitcher').style.display='inline-flex';
+  document.getElementById('progWrap').style.display='flex';
+  show('scrQ');
+  renderQ();
+}
+
+function buildQList(role) {
+  let qs = [...Qs[role]];
+  // Append custom questions as textarea items
+  S.customQuestions.forEach((q,i) => {
+    qs.push({ id:'custom_'+i, sect:'Additional', type:'textarea', text:q, required:false });
+  });
+  return qs;
+}
+
+function switchRole() {
+  saveProgress();
+  currentRole=null;
+  document.getElementById('roleStartBtn').disabled=true;
+  document.querySelectorAll('.rcard').forEach(c=>c.classList.remove('sel'));
+  show('scrRole');
+  updateRoleStatus();
+  document.getElementById('roleSwitcher').style.display='none';
+  document.getElementById('progWrap').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  QUESTION RENDERING
+// ══════════════════════════════════════════════════════════════
+function renderQ() {
+  const q=currentQs[currentQIdx];
+  const total=currentQs.length;
+  const m=ROLE_META[currentRole];
+  document.getElementById('qCtr').textContent=`Question ${currentQIdx+1} of ${total}`;
+  const pct=Math.round(((currentQIdx+1)/total)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('progSect').textContent=q.sect;
+
+  const val=currentAnswers[q.id]||'';
+  let inputHtml='';
+  if(q.type==='text'){
+    inputHtml=`<input type="text" id="qInp" value="${esc(val)}" placeholder="Type your answer…" autocomplete="off">`;
+  } else if(q.type==='textarea'){
+    inputHtml=`<textarea id="qInp" placeholder="Type your answer…">${esc(val)}</textarea>`;
+  } else if(q.type==='single'){
+    inputHtml=`<div class="choices">${q.choices.map(c=>{const s=val===c?'sel':'';return`<button class="cbtn ${s}" onclick="selSingle(this,'${esc(c)}')" data-v="${esc(c)}"><span class="chk">${s?'✓':''}</span>${c}</button>`;}).join('')}</div>`;
+  } else if(q.type==='multi'){
+    const sel=Array.isArray(val)?val:[];
+    inputHtml=`<div class="choices">${q.choices.map(c=>{const s=sel.includes(c)?'sel':'';return`<button class="cbtn multi ${s}" onclick="togMulti(this,'${esc(c)}')" data-v="${esc(c)}"><span class="chk">${s?'✓':''}</span>${c}</button>`;}).join('')}</div><div class="multi-hint">Select all that apply</div>`;
+  }
+
+  // Compliance nudge
+  const nudgeData=COMP_NUDGES[q.id];
+  let nudgeHtml='';
+  if(nudgeData && detectedFrameworks.some(f=>nudgeData.frameworks.includes(f))){
+    nudgeHtml=`<div class="comp-nudge" style="display:block">
+      <div class="cn-label">⚠ Compliance Note</div>
+      <div class="cn-text">${nudgeData.text}</div>
+    </div>`;
+  }
+
+  document.getElementById('qWrap').innerHTML=`
+    <div class="qcard" style="--qa:${m.color}">
+      <div class="q-sect">${q.sect}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.hint?`<div class="q-hint">${q.hint}</div>`:''}
+      ${q.ex?`<div class="q-ex"><strong>${q.ex.l}</strong>${q.ex.t}</div>`:''}
+      ${inputHtml}
+      ${nudgeHtml}
+      <div class="val-nudge" id="valNudge"><div class="vn-label">💡 Helpful nudge</div><div class="vn-text"></div></div>
+      <div class="followup-q" id="followupQ">
+        <div class="fq-label">🔗 Follow-up</div>
+        <div class="fq-text">For each system you listed (NCIC, RMS, CAD, etc.) — is the integration read-only, or does your system also need to write data back to it?</div>
+        <textarea id="fqInp" placeholder="e.g. NCIC — read-only. Tyler RMS — read and write back arrest records." style="margin-top:8px;" oninput="currentAnswers['integrations_rw']=this.value"></textarea>
+      </div>
+    </div>`;
+
+  document.getElementById('qBack').style.visibility=currentQIdx===0?'hidden':'visible';
+  const isLast=currentQIdx===total-1;
+  const nb=document.getElementById('qNext');
+  if(isLast){ nb.textContent='✦ Save My Section'; nb.onclick=saveSection; }
+  else { nb.textContent='Next →'; nb.onclick=nextQ; }
+  document.getElementById('qSkip').style.display=q.required===false?'inline':'none';
+  setTimeout(()=>{const i=document.getElementById('qInp');if(i)i.focus();},80);
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+function capture(){
+  const q=currentQs[currentQIdx];
+  if(q.type==='text'||q.type==='textarea'){const el=document.getElementById('qInp');if(el)currentAnswers[q.id]=el.value.trim();}
+}
+
+function selSingle(btn,val){
+  document.querySelectorAll('.cbtn').forEach(b=>{b.classList.remove('sel');b.querySelector('.chk').textContent='';});
+  btn.classList.add('sel');btn.querySelector('.chk').textContent='✓';
+  currentAnswers[currentQs[currentQIdx].id]=val;
+}
+
+function togMulti(btn,val){
+  const id=currentQs[currentQIdx].id;
+  if(!Array.isArray(currentAnswers[id]))currentAnswers[id]=[];
+  const idx=currentAnswers[id].indexOf(val);
+  if(idx===-1){currentAnswers[id].push(val);btn.classList.add('sel');btn.querySelector('.chk').textContent='✓';}
+  else{currentAnswers[id].splice(idx,1);btn.classList.remove('sel');btn.querySelector('.chk').textContent='';}
+}
+
+// ── TASK 2: Light input validation ──
+function validateCurrent() {
+  const q = currentQs[currentQIdx];
+  const val = currentAnswers[q.id] || '';
+  const nudgeEl = document.getElementById('valNudge');
+  const fqEl = document.getElementById('followupQ');
+  if (!nudgeEl) return true;
+  nudgeEl.style.display = 'none';
+  if (fqEl) fqEl.style.display = 'none';
+
+  // Must-have features: need at least 3 items
+  if (q.id === 'must_haves' && typeof val === 'string' && val.trim()) {
+    const lines = val.split(/[\n,.]/).map(s=>s.trim()).filter(Boolean);
+    if (lines.length < 3) {
+      nudgeEl.style.display = 'block';
+      nudgeEl.querySelector('.vn-text').textContent = 'Try to list at least three features — the more specific you are, the more useful the PRD will be.';
+      return false;
+    }
+  }
+
+  // Integrations: check for RMS/NCIC/CAD — show read/write followup
+  if (q.id === 'integrations' && typeof val === 'string') {
+    const hasKnownSystems = /\b(NCIC|RMS|CAD|Tyler|New World|Spillman|TriTech|Motorola|PremierOne)\b/i.test(val);
+    if (hasKnownSystems && fqEl && !currentAnswers['integrations_rw']) {
+      fqEl.style.display = 'block';
+      return false;
+    }
+  }
+
+  // Who uses / personas: vague single-word descriptions
+  if ((q.id === 'who_uses' || q.id === 'personas') && typeof val === 'string' && val.trim()) {
+    const words = val.trim().split(/\s+/);
+    if (words.length < 6) {
+      nudgeEl.style.display = 'block';
+      nudgeEl.querySelector('.vn-text').textContent = 'Can you describe each user type in a bit more detail — what they do, and what they need from the system?';
+      return false;
+    }
+  }
+  return true;
+}
+
+function nextQ(){
+  capture();
+  const valid = validateCurrent();
+  if (!valid) return; // Stay on question but nudge is shown
+  currentQIdx++;
+  renderQ();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function prevQ(){capture();if(currentQIdx>0){currentQIdx--;renderQ();window.scrollTo({top:0,behavior:'smooth'});}}
+function skipQ(){currentAnswers[currentQs[currentQIdx].id]='[skipped]';nextQ();}
+
+function saveProgress(){
+  capture();
+  if(currentRole&&Object.keys(currentAnswers).length>0){
+    session.contributions[currentRole]={...currentAnswers};
+    if(currentAnswers.name)session.productName=currentAnswers.name;
+    session.complianceData={answers:screenerAnswers,frameworks:detectedFrameworks};
+    saveSession();
+  }
+}
+
+function saveSection(){
+  saveProgress();
+  document.getElementById('doneTitle').textContent=`${ROLE_META[currentRole].label} section saved!`;
+  document.getElementById('doneCode').textContent=session.code;
+  const roles=['founder','pm','developer','leo'];
+  document.getElementById('doneContribs').innerHTML=roles.map(r=>{
+    const done=!!session.contributions[r];const m=ROLE_META[r];
+    return `<div class="dc ${done?'has':''}"><div class="dc-icon">${m.icon}</div><div class="dc-name">${m.label.split('/')[0].trim()}</div><div class="dc-st">${done?'✓ Complete':'Not yet'}</div></div>`;
+  }).join('');
+  const n=Object.keys(session.contributions).length;
+  document.getElementById('doneDesc').textContent=n>1?'Great — multiple contributors have added sections. Generate the PRD or invite more contributors.':'Your answers are saved. Share the code so others can contribute, or generate the PRD now.';
+  document.getElementById('roleSwitcher').style.display='none';
+  document.getElementById('progWrap').style.display='none';
+  show('scrDone');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PRD GENERATION
+// ══════════════════════════════════════════════════════════════
+async function generatePRD(){
+  saveProgress();
+  show('scrGen');
+  document.getElementById('roleSwitcher').style.display='none';
+  document.getElementById('progWrap').style.display='none';
+
+  const labels=['Analyzing all contributions...','Drafting functional requirements...','Building non-functional requirements...','Adding compliance framework...','Synthesizing all sections...','Finalizing your PRD...'];
+  let li=0;
+  const lel=document.getElementById('genLbl');
+  const iv=setInterval(()=>{li=(li+1)%labels.length;lel.textContent=labels[li];},3500);
+
+  const compBlock = detectedFrameworks.length > 0
+    ? `COMPLIANCE FRAMEWORKS DETECTED: ${detectedFrameworks.join(', ')}\nCompliance screening answers: ${JSON.stringify(screenerAnswers||session.complianceData?.answers||{})}`
+    : 'No specific compliance frameworks identified yet.';
+
+  const contribBlock=Object.entries(session.contributions).map(([role,answers])=>{
+    const m=ROLE_META[role];
+    const lines=Object.entries(answers).map(([k,v])=>{
+      const q=Qs[role]?.find(q=>q.id===k);
+      const label=q?q.text:k;
+      const val=Array.isArray(v)?v.join(', '):v;
+      return `  [${label}]\n  ${val}`;
+    }).join('\n\n');
+    return `=== CONTRIBUTOR: ${m.label} ===\n${lines}`;
+  }).join('\n\n');
+
+  const prompt=`You are an expert product manager and technical writer specializing in justice and law enforcement software.
+
+${compBlock}
+
+The following PRD questionnaire was completed by ${Object.keys(session.contributions).length} contributor(s):
+
+${contribBlock}
+
+Write a complete, professional Product Requirements Document. Synthesize all contributions. Where different roles answered the same question differently, reconcile them or note the distinction. Fill in reasonable professional assumptions for any gaps.
+
+For any detected compliance frameworks, include a dedicated compliance section with specific, actionable requirements — but always note that final requirements must be confirmed with the governing agency or CSA. Explain compliance implications in plain language where possible.
+
+Structure:
+
+## 1. Executive Summary
+
+## 2. Product Vision & Goals
+Vision statement, problem statement, 3–5 measurable success criteria.
+
+## 3. Users & Personas
+For each user type: description, goals, pain points, tech comfort level.
+
+## 4. Functional Requirements
+Number FR-001, FR-002, etc. For each:
+- **ID**: FR-XXX
+- **Description**: What the system does
+- **Acceptance Criteria**: Testable condition
+Group by feature area.
+
+## 5. Non-Functional Requirements
+Number NFR-001, NFR-002, etc. Cover performance, availability, scalability, security, usability, data integrity.
+
+## 6. Compliance & Security Requirements
+For each identified framework, list: what it requires, how it affects architecture, estimated impact on timeline/cost. Always note requirements must be confirmed with governing agency. Use plain language.
+
+## 7. System Integrations
+
+## 8. Out of Scope
+Phase 2 features and explicit V1 exclusions.
+
+## 9. Constraints & Assumptions
+
+## 10. Stakeholders & Approval
+
+FORMATTING RULES FOR REQUIREMENTS:
+- Every Functional Requirement MUST follow Actor + Action + Condition format.
+  Example: "An authenticated Officer can submit incident details through a secure web form when connected to the network."
+- Every Non-Functional Requirement MUST include a measurable criterion where possible.
+  Example: "The system must return statute suggestions within 2 seconds under normal load (≤100 concurrent users)."
+
+HANDLING MISSING INFORMATION:
+- Do NOT invent facts not provided by contributors.
+- If information is missing or unclear, add it to an "Assumptions" section (Section 11) clearly labeled as assumed, not confirmed.
+- Clearly distinguish CONFIRMED requirements (from contributor answers) from INFERRED/ASSUMED items.
+
+COMPLIANCE:
+- For each detected framework, explain specifically how it affects system architecture, hosting, security controls, and estimated cost/timeline impact.
+- Always note that final compliance requirements must be confirmed with the governing agency or CSA.
+
+OUTPUT SECTIONS (include ALL of these):
+## 1. Executive Summary
+## 2. Product Vision & Goals
+## 3. Users & Personas
+## 4. User Workflows
+## 5. Functional Requirements (Actor + Action + Condition, numbered FR-001...)
+## 6. Non-Functional Requirements (measurable, numbered NFR-001...)
+## 7. Core Data Model
+## 8. Decision Logic & Business Rules
+## 9. Compliance & Security Requirements
+## 10. System Integrations
+## 11. Assumptions
+## 12. Known Risks
+## 13. Out of Scope
+## 14. Constraints
+## 15. Stakeholders & Approval
+
+Today: ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}.`;
+
+  let retryCount = 0;
+  async function attemptGeneration() {
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5000,messages:[{role:'user',content:prompt}]}),
+      });
+      clearInterval(iv);
+
+      if (!res.ok) {
+        const errData = await res.json().catch(()=>({}));
+        throw new Error(`API error ${res.status}: ${errData?.error?.message || res.statusText}`);
+      }
+
+      const data=await res.json();
+      const md=(data.content?.[0]?.text||'').trim();
+
+      // Task 5: Validate response is substantial
+      if (!md || md.length < 500) {
+        throw new Error('The AI returned an incomplete response. This sometimes happens with complex sessions — please try again.');
+      }
+
+      // Task 5: Store both raw markdown and rendered HTML
+      window._prdMd = md;
+      session.prdMarkdown = md;
+      saveSession();
+
+      const pname=session.productName||'Product';
+      document.getElementById('prdName').textContent=pname;
+      document.getElementById('prdDoc').innerHTML=mdToHtml(md,pname);
+      show('scrPRD');
+
+    }catch(err){
+      clearInterval(iv);
+      retryCount++;
+      const errMsg = err.message || 'An unexpected error occurred.';
+      const canRetry = retryCount < 2;
+      document.getElementById('prdDoc').innerHTML=`
+        <div style="padding:40px;text-align:center;">
+          <div style="font-size:32px;margin-bottom:16px;">⚠</div>
+          <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">PRD Generation Failed</div>
+          <div style="font-size:14px;color:#4a6080;max-width:480px;margin:0 auto 24px;line-height:1.6;">${errMsg}</div>
+          ${canRetry ? `<button onclick="retryGeneration()" style="background:#e8a020;color:#0d1117;border:none;padding:12px 28px;border-radius:6px;font-size:15px;font-weight:700;cursor:pointer;">↺ Try Again</button>` : '<div style="font-size:13px;color:#888;">If this keeps happening, try reducing the amount of text in your answers or contact support.</div>'}
+        </div>`;
+      show('scrPRD');
+    }
+  }
+  window.retryGeneration = function() {
+    show('scrGen');
+    document.getElementById('genLbl').textContent='Retrying generation...';
+    const iv2=setInterval(()=>{document.getElementById('genLbl').textContent=labels[Math.floor(Math.random()*labels.length)];},3500);
+    setTimeout(()=>{ clearInterval(iv2); attemptGeneration(); },800);
+  };
+  attemptGeneration();
+}
+
+function mdToHtml(md,name){
+  const date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const roles=Object.keys(session.contributions).map(r=>ROLE_META[r].label).join(', ');
+  const compBanner=detectedFrameworks.length>0
+    ?`<div class="comp-summary-banner"><div class="csb-title">⚠ Compliance Frameworks Identified</div><div class="csb-items">This PRD incorporates requirements from: <strong>${detectedFrameworks.join(', ')}</strong>. See Section 6 for details. All requirements should be confirmed with the governing agency or Compliance Systems Agency (CSA).</div></div>` : '';
+  const html=md
+    .replace(/^#### (.+)$/gm,'<h4>$1</h4>').replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>.*<\/li>\n?)+/gs,m=>`<ul>${m}</ul>`)
+    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>').replace(/^(?!<[hul])(.+\S.*)$/gm,'<p>$1</p>');
+  return `<h1>${name||'Product Requirements Document'}</h1>
+<div class="dmeta"><span>${S.company||'Justice Innovations'}</span><span>Generated: ${date}</span><span>Contributors: ${roles||'—'}</span></div>
+${compBanner}${html}`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DOWNLOAD
+// ══════════════════════════════════════════════════════════════
+function downloadDoc(){
+  const btn=document.getElementById('dlBtn');
+  btn.textContent='⏳ Preparing...';btn.disabled=true;
+  const name=session.productName||'Product';
+  const body=document.getElementById('prdDoc').innerHTML;
+  const docHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.7;color:#111;margin:1in}
+h1{font-size:20pt;color:#0d1117;border-bottom:2pt solid #0d1117;padding-bottom:8pt;margin-bottom:6pt}
+h2{font-size:14pt;color:#1a3a5c;border-left:4pt solid #e8a020;padding-left:8pt;margin-top:22pt;margin-bottom:8pt}
+h3{font-size:11pt;color:#2c3e50;text-transform:uppercase;letter-spacing:.5pt;margin-top:14pt}
+p{margin-bottom:8pt;color:#2d3748}ul,ol{margin:6pt 0 12pt 20pt}li{margin-bottom:4pt;color:#2d3748}strong{color:#1a1a2e}
+.dmeta{font-size:9pt;color:#888;font-family:monospace;margin-bottom:28pt}
+.comp-summary-banner{background:#fff8e6;border:1pt solid #e8a020;padding:10pt 14pt;margin-bottom:18pt}
+.csb-title{font-size:10pt;font-weight:bold;color:#8a5c00;margin-bottom:4pt}
+.csb-items{font-size:10pt;color:#5a4000}
+</style></head><body>${body}</body></html>`;
+  const blob=new Blob([docHtml],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`${name.replace(/[^a-z0-9]/gi,'_')}_PRD_${new Date().toISOString().slice(0,10)}.doc`;
+  a.click();URL.revokeObjectURL(url);
+  setTimeout(()=>{btn.textContent='⬇ Download Word Doc';btn.disabled=false;},2000);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MODALS & UTILITIES
+// ══════════════════════════════════════════════════════════════
+function openModal(id){
+  if(id==='sessionModal'){ updateSessionModal(); }
+  document.getElementById(id).classList.add('on');
+}
+function closeModal(id){ document.getElementById(id).classList.remove('on'); }
+
+function updateSessionModal(){
+  const roles=['founder','pm','developer','leo'];
+  document.getElementById('modalContribs').innerHTML=`
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Contributions</div>
+    ${roles.map(r=>{
+      const done=!!session.contributions[r];const m=ROLE_META[r];
+      return `<div style="display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px;">
+        <div style="width:7px;height:7px;border-radius:50%;background:${done?'#3fb950':'var(--border)'};flex-shrink:0;"></div>
+        <span style="color:var(--mid);">${m.icon} ${m.label}</span>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;color:${done?'#3fb950':'var(--dim)'};">${done?'DONE':'—'}</span>
+      </div>`;
+    }).join('')}`;
+}
+
+document.querySelectorAll('.modal-ov').forEach(el=>el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');}));
+
+function startOver(){
+  if(!confirm('Start a completely new PRD? Current session will be lost.'))return;
+  session={code:null,productName:'',contributions:{},complianceData:{answers:{},frameworks:[]}};
+  screenerAnswers={};detectedFrameworks=[...S.defaultCompliance];
+  currentRole=null;currentQs=[];currentQIdx=0;currentAnswers={};
+  document.getElementById('sessionPill').style.display='none';
+  document.getElementById('roleSwitcher').style.display='none';
+  document.getElementById('progWrap').style.display='none';
+  document.getElementById('roleStartBtn').disabled=true;
+  document.querySelectorAll('.rcard').forEach(c=>c.classList.remove('sel','done-b'));
+  document.getElementById('sessStatus').style.display='none';
+  document.getElementById('joinArea').style.display='none';
+  show('scrLand');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════
+loadSettings();
+if(S.brandColor) document.documentElement.style.setProperty('--brand-primary',S.brandColor);
+</script>
+</body>
+</html>

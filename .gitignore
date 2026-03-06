@@ -1,0 +1,9 @@
+node_modules
+dist
+*.local
+.env
+.env.*
+*.tsbuildinfo
+.claude/
+prd-builder-v5.html
+prd-builder-readme.docx
