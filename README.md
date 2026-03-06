@@ -1,5 +1,10 @@
 # PRD Builder
 
+[![CI](https://github.com/ahb-sjsu/prd-builder/actions/workflows/ci.yaml/badge.svg)](https://github.com/ahb-sjsu/prd-builder/actions/workflows/ci.yaml)
+[![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-blue.svg)](LICENSE)
+[![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://ahb-sjsu.github.io/prd-builder/)
+[![ISO 29148](https://img.shields.io/badge/standard-ISO%2FIEC%2FIEEE%2029148-informational)](docs/DEVELOPMENT.md#standards-alignment)
+
 Build professional, standards-aligned Product Requirements Documents through guided questionnaires -- no technical knowledge needed.
 
 **[Use PRD Builder](https://ahb-sjsu.github.io/prd-builder/)**
