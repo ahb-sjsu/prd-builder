@@ -3,11 +3,12 @@ import { useSettings } from '../../settings/useSettings';
 import { usePlan } from '../../plan/usePlan';
 
 const BRAND_COLORS = [
-  { color: '#e8a020', name: 'Gold' },
-  { color: '#4a9eff', name: 'Blue' },
-  { color: '#3fb950', name: 'Green' },
-  { color: '#bc8cff', name: 'Purple' },
-  { color: '#f85149', name: 'Red' },
+  { color: '#66c2a5', name: 'Teal' },
+  { color: '#fc8d62', name: 'Coral' },
+  { color: '#8da0cb', name: 'Blue' },
+  { color: '#e78ac3', name: 'Pink' },
+  { color: '#a6d854', name: 'Lime' },
+  { color: '#ffd92f', name: 'Gold' },
 ];
 
 const COMPLIANCE_FRAMEWORKS = [

@@ -4,7 +4,7 @@ export const ROLES: RoleMeta[] = [
   {
     id: 'founder',
     label: 'Founder / Entrepreneur',
-    color: '#e8a020',
+    color: '#66c2a5',
     icon: '\u{1F4A1}',
     description:
       'You have the vision. Plain-language questions, no jargon required.',
@@ -12,7 +12,7 @@ export const ROLES: RoleMeta[] = [
   {
     id: 'pm',
     label: 'Product Manager / COO',
-    color: '#4a9eff',
+    color: '#fc8d62',
     icon: '\u{1F4CB}',
     description:
       'You bridge vision and execution -- users, priorities, timelines.',
@@ -20,7 +20,7 @@ export const ROLES: RoleMeta[] = [
   {
     id: 'developer',
     label: 'Developer / Tech Lead',
-    color: '#3fb950',
+    color: '#8da0cb',
     icon: '\u{2699}\u{FE0F}',
     description:
       'Precise specs -- architecture, APIs, performance, security details.',
@@ -28,7 +28,7 @@ export const ROLES: RoleMeta[] = [
   {
     id: 'leo',
     label: 'Law Enforcement / Agency',
-    color: '#bc8cff',
+    color: '#e78ac3',
     icon: '\u{1F535}',
     description:
       "You're the end user. Operational language -- what officers need.",

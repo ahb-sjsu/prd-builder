@@ -3,7 +3,7 @@ import type { AppSettings } from '../types/settings';
 export const DEFAULT_SETTINGS: AppSettings = {
   company: '',
   platname: 'PRD Builder',
-  brandColor: '#e8a020',
+  brandColor: '#66c2a5',
   roleNames: {
     founder: 'Founder / Entrepreneur',
     pm: 'Product Manager / COO',
