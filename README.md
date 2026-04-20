@@ -18,6 +18,29 @@ Build professional, standards-aligned Product Requirements Documents through gui
 5. **Invite your team** -- share the 6-character session code so teammates can add their perspective
 6. **Generate your PRD** -- get a complete, structured document ready to hand to developers
 
+```mermaid
+flowchart TB
+    START[Start new PRD]
+    COMP[Compliance screening<br/>CJIS / FedRAMP / HIPAA / etc]
+    ROLE{Pick role}
+    R1[Founder]
+    R2[Product Manager]
+    R3[Developer]
+    R4[Law Enforcement]
+    Q[Guided questionnaire<br/>tailored to role]
+    INV[Invite team<br/>6-char session code]
+    COLLAB[Teammates add perspectives]
+    GEN[Generate PRD<br/>20 sections ISO/IEC/IEEE 29148]
+    OUT[Download / share]
+
+    START --> COMP --> ROLE
+    ROLE --> R1 --> Q
+    ROLE --> R2 --> Q
+    ROLE --> R3 --> Q
+    ROLE --> R4 --> Q
+    Q --> INV --> COLLAB --> GEN --> OUT
+```
+
 ## Standards Alignment
 
 PRD Builder's questionnaire and output structure are aligned with established software engineering standards:
